@@ -1,0 +1,46 @@
+---
+- name: GATHER OS SPECIFIC VARS
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../../../vars/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "../../../vars/{{ ansible_distribution }}.yml"
+    - "../../../vars/{{ ansible_os_family }}.yml"
+
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: PHP | ENABLE FPM
+  service: name={{ php_fpm_service }} state=started enabled=yes
+
+- name: PHP | UPDATE FPM CONFIG
+  lineinfile: dest={{ php_pool_file }} regexp='^;?catch_workers_output\s?=.*$' line=catch_workers_output=yes
+  notify: restart php-fpm
+
+- name: PHP | UPDATE FPM SOCKET
+  lineinfile: dest={{ php_pool_file }} regexp='^;?listen\s?=.*$' line=listen=127.0.0.1:9000
+  notify: restart php-fpm
+
+- name: PHP | SET FPM GROUP
+  lineinfile: dest={{ php_pool_file }} regexp="^group\s?=.*$" line="group = {{ group }}"
+  notify: restart php-fpm
+
+- name: PHP | SET FPM USER
+  lineinfile: dest={{ php_pool_file }} regexp="^user\s?=.*$" line="user = {{ user }}"
+  notify: restart php-fpm
+
+- name: PHP | SET OWNERSHIP
+  file: path=/var/lib/php/session owner={{ user }} group={{ user }} state=directory
+  notify: restart php-fpm
+
+- name: PHP | SET TIMEZONE
+  lineinfile: dest={{ item }} regexp='^;?date\.timezone\s?=.*$' line="date.timezone={{ timezone }}"
+  with_items: php_ini
+
+- name: PHP | SET PHP INI PARAMS
+  lineinfile: dest={{ item[0] }} regexp='^;?{{ item[1].key }} *=.*$' line="{{ item[1].key }}={{ item[1].value }}"
+  with_nested:
+    - php_ini
+    - "{{ params }}"

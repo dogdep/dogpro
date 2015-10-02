@@ -1,0 +1,67 @@
+<form ng-submit="create()" class="form-horizontal">
+
+    <div class="form-group">
+        <label for="name" class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" placeholder="inventory name..." id="name" ng-model="inventory.name" required>
+
+            <div class="checkbox">
+                <label>
+                    <input ng-model="inventory.download_keys" type="checkbox"/> Download key from vault
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input ng-model="inventory.params.pipelining" type="checkbox"/>
+                    Enable pipelining <a class="text-muted" href="http://docs.ansible.com/ansible/intro_configuration.html#pipelining" target="_blank"><i class="fa fa-question-circle"></i></a>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inv" class="col-sm-3 control-label">Inventory</label>
+        <div class="col-sm-9">
+            <textarea id="inv" ng-model="inventory.inventory" class="form-control" rows="6" placeholder="contents..." required></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-7">
+            <button class="btn btn-success" type="submit">Add inventory</button>
+        </div>
+    </div>
+
+</form>
+
+<ul class="list-group list-commands">
+    <li ng-repeat="(i, inv) in repo.inventories" class="list-group-item">
+        <div class="col-buttons pull-right">
+            <button class="btn btn-link" ng-click="remove(inv)"><i class="fa fa-times"></i></button>
+
+            <button class="btn btn-link" ng-click="inventoryCollapse[i]=!inventoryCollapse[i]"><i class="fa fa-pencil"></i></button>
+        </div>
+        <div class="content">
+            <div><strong><i class="fa fa-building fa-fw"></i> {{ inv.name }}</strong></div>
+        </div>
+
+        <div collapse="!inventoryCollapse[i]" class="hr">
+            <div class="content">
+                <div class="form-group">
+                    <textarea class="form-control" ng-model="inv.inventory" title="Inventory"></textarea>
+                    <div class="checkbox">
+                        <label>
+                            <input ng-model="inv.download_keys" type="checkbox"/> Download key from vault
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input ng-model="inv.params.pipelining" type="checkbox"/>
+                            Enable pipelining <a class="text-muted" href="http://docs.ansible.com/ansible/intro_configuration.html#pipelining" target="_blank"><i class="fa fa-question-circle"></i></a>
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-block btn-success btn-sm" ng-click="update(inv)"><i class="fa fa-check"></i> Save</button>
+            </div>
+        </div>
+    </li>
+</ul>

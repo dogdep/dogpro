@@ -1,0 +1,11 @@
+---
+- name: SUPERVISOR | INSTALL
+  yum: name=supervisor state=present
+
+- name: SUPERVISOR | ENABLE SERVICE
+  service: name=supervisord state=started enabled=yes
+
+- name: SUPERVISOR | ADD CONFIG
+  template: src=program.ini dest="/etc/supervisord.d/{{ item.name }}.ini"
+  with_items: services
+  notify: restart supervisor

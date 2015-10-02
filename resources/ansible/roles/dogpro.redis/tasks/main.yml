@@ -1,0 +1,10 @@
+---
+
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: REDIS | ENABLE AT STARTUP
+  service: name=redis state=started enabled=yes

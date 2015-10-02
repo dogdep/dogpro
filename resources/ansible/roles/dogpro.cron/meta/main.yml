@@ -1,0 +1,14 @@
+name: Setup cron
+desc:
+ - This role:
+   - Installs cron service
+   - Adds cronjobs
+
+variables:
+  user:
+    name: User to run jobs with
+    type: string
+
+  jobs:
+    name: Jobs
+    type: array

@@ -1,0 +1,4 @@
+name: Creates user
+variables:
+  user:
+    name: User name

@@ -1,0 +1,18 @@
+---
+
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: CRON | SETUP JOBS
+  cron:
+    name: "{{ item.name|default('job') }}"
+    user: "{{ item.user|default(user) }}"
+    job: "{{ item.job }}"
+    month: "{{ item.month|default('*') }}"
+    day: "{{ item.day|default('*') }}"
+    hour: "{{ item.hour|default('*') }}"
+    minute: "{{ item.minute|default('*') }}"
+  with_items: "{{ jobs }}"

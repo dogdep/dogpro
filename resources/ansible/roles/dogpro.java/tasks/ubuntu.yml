@@ -1,0 +1,4 @@
+---
+
+- name: JAVA | INSTALL
+  apt: name=java state=present

@@ -1,0 +1,24 @@
+---
+
+- name: NODEJS | CHECK IF NODE IS INSTALLED
+  stat: path=/usr/bin/node
+  register: node
+
+- name: NODEJS | DOWNLOAD
+  get_url: dest=/opt/node.tar.gz url=http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz
+  when: node.stat.exists == false
+
+- name: NODEJS | UNPACK
+  unarchive: src=/opt/node.tar.gz dest=/opt copy=no
+  when: node.stat.exists == false
+
+- name: NODEJS | LINK BINARIES
+  file: dest="/usr/bin/{{ item}}" src="/opt/node-v0.12.5-linux-x64/bin/{{ item }}" state=link
+  when: node.stat.exists == false
+  with_items:
+   - npm
+   - node
+
+- name: NODEJS | INSTALL PACKAGES
+  npm: name={{ item }} global=yes state=present
+  with_items: "{{ install }}"

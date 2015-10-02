@@ -1,0 +1,33 @@
+---
+
+- name: NGINX | ADD SITE CONFIG
+  template: src={{ type }}.conf dest=/etc/nginx/sites-available.d/{{ site }}.conf
+  notify: reload nginx
+
+- name: NGINX | ENABLE SITE
+  file: src="/etc/nginx/sites-available.d/{{ site }}.conf" dest="/etc/nginx/sites-enabled.d/{{ site }}.conf" state=link
+  notify: reload nginx
+
+- name: NGINX | CREATE HTML DIR
+  file: dest={{ html_root }} state=directory
+  register: www_created
+  notify: reload nginx
+
+- name: NGINX | CREATE SSL DIR
+  file: dest=/etc/nginx/ssl state=directory
+  when: ssl_enable
+
+- name: NGINX | WRITE SSL CERTIFICATE
+  copy: content="{{ ssl_crt }}" dest="/etc/nginx/ssl/{{ site }}.crt"
+  when: ssl_enable
+  notify: reload nginx
+
+- name: NGINX | WRITE SSL CERTIFICATE KEY
+  copy: content="{{ ssl_key }}" dest="/etc/nginx/ssl/{{ site }}.key"
+  when: ssl_enable
+  notify: reload nginx
+
+- name: NGINX | RESTORE SELINUX CONTEXT
+  shell: restorecon -R {{ html_root }}
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled" and www_created.changed
+  notify: reload nginx

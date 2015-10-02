@@ -1,0 +1,21 @@
+---
+
+- name: NGINX | NGINX REPO
+  copy: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo
+
+- name: NGINX | SELINUX BINDINGS
+  yum: name={{item}} state=present
+  with_items:
+   - libsemanage-python
+   - libselinux-python
+
+- name: NGINX | INSTALL NGINX
+  yum: name=nginx state=present
+
+- name: NGINX | SET HTTPD_UNIFIED (SELINUX)
+  seboolean: name={{item}} state=yes persistent=yes
+  when: ansible_selinux.status == "enabled"
+  with_items:
+    - httpd_unified
+    - httpd_can_network_connect
+    - httpd_can_network_relay

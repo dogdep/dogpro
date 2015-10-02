@@ -1,0 +1,61 @@
+<form method="post" class="form-horizontal">
+    <h3>Settings</h3>
+    <hr>
+    <div class="form-group">
+        <label for="slack_channel" class="col-sm-3 control-label">Slack channel</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" placeholder="#channel" id="slack_channel" ng-model="repo.params.slack_channel">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="checkbox col-sm-9 col-sm-offset-3">
+            <label>
+                <input type="checkbox" id="notify_success" ng-model="repo.params.notify_success"> Notify on success
+            </label>
+        </div>
+        <div class="checkbox col-sm-9 col-sm-offset-3">
+            <label>
+                <input type="checkbox" id="notify_failure" ng-model="repo.params.notify_failure"> Notify on failure
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-7">
+            <button class="btn btn-success" ng-click="save()" type="submit">Save</button>
+        </div>
+    </div>
+
+    <div ng-if="user.admin">
+        <h3>Members</h3>
+        <hr>
+        <div class="form-group">
+            <label for="assign_user" class="col-sm-3 control-label">Members</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <select class="form-control" id="assign_user" ng-model="assign_user">
+                        <option ng-if="!isAssigned(user)" ng-repeat="user in users" value="{{ user.id }}">{{user.email}}</option>
+                    </select>
+                    <span class="input-group-btn">
+                        <a ng-click="assignUser(assign_user)" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
+                    </span>
+                </div>
+                <br>
+
+                <ul class="list-group list-commands">
+                    <li ng-repeat="user in repo.users" class="list-group-item">
+                        <div class="col-buttons pull-right">
+                            <a ng-click="removeUser(user)" class="btn btn-min"><i class="fa fa-times"></i></a>
+                        </div>
+                        <div class="content">
+                            <i class="fa fa-fw fa-user"></i> <strong>{{user.email}}</strong>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+<hr/>
+<div class="text-center">
+    <button class="btn btn-link text-danger" ng-click="delete()">Delete repository</button>
+</div>

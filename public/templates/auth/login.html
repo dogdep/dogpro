@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="panel panel-main">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <img src="/build/img/splash.png" alt="DogDep"/>
+                    </div>
+                    <hr/>
+                    <h3>Login with</h3>
+                    <a ng-repeat="provider in providers" ng-href="/internal/auth/login/{{ provider }}" target="_self" class="btn btn-default btn-block btn-login">
+                        <img ng-src="/build/img/{{ provider }}.png"> <span>{{ provider }}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

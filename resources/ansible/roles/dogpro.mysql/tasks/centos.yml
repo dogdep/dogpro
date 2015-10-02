@@ -1,0 +1,22 @@
+
+---
+
+- name: MYSQL | CHECK MYSQL REPO
+  yum: name=mysql-community-release state=present
+  register: find_mysql
+  ignore_errors: true
+
+- name: MYSQL | INSTALL MYSQL REPO
+  yum: name=http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm state=present
+  when: find_mysql|failed and ansible_distribution == "CentOS" and ansible_distribution_version >= "7"
+
+- name: MYSQL | INSTALL MYSQL REPO
+  yum: name=http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm state=present
+  when: find_mysql|failed and ansible_distribution == "CentOS" and ansible_distribution_version < "7"
+
+- name: MYSQL | INSTALL PYTHON BINDINGS
+  yum: name=MySQL-python state=present
+
+- name: MYSQL | INSTALL
+  yum: name=mysql-community-server state=present enablerepo=mysql56-community
+

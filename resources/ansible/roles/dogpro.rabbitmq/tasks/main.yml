@@ -1,0 +1,11 @@
+---
+
+- name: RABBITMQ | INSTALL RABBIT MQ
+  yum: name=rabbitmq-server state=present
+
+- name: RABBITMQ | NIS_ENABLED
+  seboolean: name=nis_enabled state=yes persistent=yes
+  when: ansible_selinux.status == "enabled"
+
+- name: RABBITMQ | ENABLE SERVICE
+  service: name=rabbitmq-server state=started enabled=yes

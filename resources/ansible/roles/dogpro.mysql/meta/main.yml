@@ -1,0 +1,22 @@
+name: Setup mysql
+desc:
+  - Tasks:
+    - Install MySQL community server
+    - Add databases
+    - Add users
+    - Grant permissions
+
+
+variables:
+  users:
+    name: Users
+    desc: Comma separated users to crate (myuser:mypass,myotheruser:otherpass)
+    type: array
+  databases:
+    name: Databases
+    desc: Comma separated databases to create
+    type: array
+  permissions:
+    name: User permissions
+    desc: Comma separated list of mysql users. I.E. "myuser:mydb,myotheruser:otherdb"
+    type: array

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="dp" ng-strict-di>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DogPro</title>
+    <base href="/">
+
+    <link href="/build/app.css" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300,600' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/favicon.png">
+    <script src="https://js.pusher.com/3.0/pusher.min.js"></script>
+</head>
+<body dp-body>
+    <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"></toaster-container>
+
+    <div ui-view></div>
+
+    <div class="splash" dp-hide-on-load></div>
+
+    <script src="/build/js/vendor.js"></script>
+    <script src="/build/js/app.js"></script>
+    <script src="/build/js/templates.js"></script>
+</body>
+</html>

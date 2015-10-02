@@ -1,0 +1,1 @@
+user: "{{ global.http_user }}"

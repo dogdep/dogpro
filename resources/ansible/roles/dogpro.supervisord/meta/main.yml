@@ -1,0 +1,8 @@
+name: Install and setup supervisord
+desc:
+ - Installs supervisord and configures provided services
+variables:
+  services:
+    name: Array of services
+    desc: "{name: list, command: ls}"
+    type: array

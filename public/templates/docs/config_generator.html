@@ -1,0 +1,67 @@
+<h2>General configuration</h2>
+<hr>
+
+<form action="" class="form-horizontal">
+  <div class="form-group">
+    <label for="http_user" class="col-sm-3 control-label">Http user</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" placeholder="www" id="http_user" ng-model="config.defaults.http_user">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="deploy_user" class="col-sm-3 control-label">Deploy user</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" placeholder="www" id="deploy_user" ng-model="config.defaults.deploy_user">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="deploy_dir" class="col-sm-3 control-label">Deploy dir</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" placeholder="/var/www" id="deploy_dir" ng-model="config.defaults.deploy_dir">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="public_dir" class="col-sm-3 control-label">Public dir</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="text" placeholder="public" id="public_dir" ng-model="config.defaults.public_dir">
+    </div>
+  </div>
+
+  <h3>Roles</h3>
+
+  <hr>
+
+  <div class="form-group">
+    <label for="public_dir" class="col-sm-3 control-label">Add role</label>
+    <div class="col-sm-9">
+      <div class="input-group">
+        <select class="form-control" ng-model="new_role">
+          <option ng-repeat="(roleId, role) in roleConfig" value="{{ roleId }}">{{ role.name }}</option>
+        </select>
+        <span class="input-group-btn">
+            <a class="btn btn-search btn-primary" ng-click="add(new_role)">Add</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div ng-repeat="(playId, play) in config.plays">
+    <h4>
+      {{ play.name }} ({{ play.role }})
+      <a class="text-muted pull-right" ng-click="removePlay(playId)"><i class="fa fa-times"></i></a>
+    </h4>
+    <hr>
+    <div class="form-group" ng-repeat="(varName, varConf) in roleConfig[play.role].variables">
+      <label for="{{ 'play_' + playId + '_' + varName }}" class="col-sm-3 control-label">{{ varConf.name }}</label>
+      <div class="col-sm-9">
+        <div class="input-group">
+          <input class="form-control" type="text" placeholder="{{ varConf.default|arrayToString }}" id="{{ 'play_' + playId + '_' + varName }}" ng-model="config.plays[playId][varName]">
+          <span class="input-group-addon">{{ varConf.type }}</span>
+        </div>
+        <span class="help-text text-muted" ng-if="varConf.desc">{{ varConf.desc }}</span>
+      </div>
+    </div>
+  </div>
+</form>
+
+<pre><code>{{ configYaml }}</code></pre>

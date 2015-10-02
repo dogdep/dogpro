@@ -1,0 +1,37 @@
+{
+  "name": "dogpro",
+  "version": "0.0.1",
+  "authors": [
+    "DATADOG <info@datadog.lt>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4",
+    "angular-animate": "~1.4",
+    "angular-bootstrap": "~0.13",
+    "angular-jwt": "~0.0.9",
+    "angular-loading-bar": "~0.7.1",
+    "angular-moment": "~0.10.3",
+    "angular-resource": "~1.4",
+    "angular-ui-router": "~0.2.15",
+    "angular-ui-router-anim-in-out": "~0.0.13",
+    "AngularJS-Toaster": "~0.4.13",
+    "bootstrap-less": "~3.3.4",
+    "fontawesome": "~4.3.0",
+    "ifvisible.js": "~1.0.4",
+    "ng-sortable": "~1.2.2",
+    "ngSmoothScroll": "~1.7.1",
+    "yamljs": "~0.1.5"
+  },
+  "resolutions": {
+    "angular": "1.4.7",
+    "angular-animate": "~1.4"
+  }
+}

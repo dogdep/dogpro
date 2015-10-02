@@ -1,0 +1,4 @@
+---
+
+- name: REDIS | INSTALL
+  yum: name=redis state=present

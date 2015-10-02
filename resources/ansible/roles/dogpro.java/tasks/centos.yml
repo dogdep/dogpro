@@ -1,0 +1,4 @@
+---
+
+- name: JAVA | INSTALL
+  yum: name=java state=present

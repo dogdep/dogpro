@@ -1,0 +1,5 @@
+deploy_to: "{{ global.deploy_dir }}"
+www_user: "{{ global.http_user }}"
+deploy_user: "{{ global.deploy_user }}"
+asset_path: ""
+reload: ["{{php_fpm_service}}", "nginx"]

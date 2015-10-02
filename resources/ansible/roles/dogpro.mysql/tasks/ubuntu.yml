@@ -1,0 +1,7 @@
+---
+
+- name: MYSQL | INSTALL PYTHON BINDINGS
+  apt: name=python-mysqldb state=present
+
+- name: MYSQL | INSTALL
+  apt: name=mysql-server state=present

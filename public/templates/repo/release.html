@@ -1,0 +1,57 @@
+<div>
+    <div class="pull-left" style="margin-right: 10px;">
+        <img ng-src="{{ release.commit_info.image }}" class="center-block img-rounded img-responsive" style="height: 40px"/>
+    </div>
+    <div class="pull-right text-right">
+        <div am-time-ago="release.created_at"></div>
+    </div>
+    <div>
+        <span class="text-muted">{{ release.commit_info.shortHash }}</span>
+        {{ release.commit_info.shortMessage }}
+    </div>
+    <div>
+        <span class="text-muted" tooltip="{{ release.commit_info.name }}">Commit by: {{ release.commit_info.name }}</span>
+    </div>
+</div>
+<hr>
+<div>
+    <div class="row">
+        <div class="col-xs-1 text-right">
+            <!-- Wrap with span is important! if fa-spin is set, angular has problems hiding it! -->
+            <span ng-show="release.status=='preparing'"><i class="fa fa-spin fa-2x fa-cog text-info"></i></span>
+            <span ng-show="release.status=='running'"><i class="fa fa-spin fa-2x fa-cog text-info"></i></span>
+            <span ng-show="release.status=='completed'"><i class="fa fa-2x fa-check text-success"></i></span>
+            <span ng-show="release.status=='error'"><i class="fa fa-2x fa-exclamation-circle text-danger"></i></span>
+            <span ng-show="release.status=='queued'"><i class="fa fa-2x fa-clock-o text-muted"></i></span>
+            <span ng-show="release.status=='cancelled'"><i class="fa fa-2x fa-times text-danger"></i></span>
+        </div>
+        <div class="col-xs-11">
+            <div ng-show="canCancel()" class="pull-right">
+                <button ng-click="cancel()" class="btn text-danger btn-link"><i class="fa fa-times"></i> Cancel release</button>
+            </div>
+            <div ng-show="release.status == 'error'" class="pull-right">
+                <button ng-click="retry()" class="btn text-danger btn-link"><i class="fa fa-refresh"></i> Retry</button>
+            </div>
+            <div style="margin-top:5px">
+                <div ng-show="release.status=='preparing'">Preparing release</div>
+                <div ng-show="release.status=='running'">
+                    Release is running<span class="text-muted" ng-if="lastTask">: {{ lastTask }}</span>
+                </div>
+                <div ng-show="release.status=='completed'">Release is completed</div>
+                <div ng-show="release.status=='error'">Release failed</div>
+                <div ng-show="release.status=='queued'">Release is queued. Please wait</div>
+                <div ng-show="release.status=='cancelled'">Release was cancelled</div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div ng-if="progress">
+    <strong class="pull-right" ng-class="{'text-danger': progressOvertime}" style="margin-left: 20px;">{{ progressLabel }}</strong>
+    <progressbar type="{{ progressOvertime ? 'danger' : 'success' }}" animate="false" value="progress"></progressbar>
+</div>
+
+<pre class="ansible-log" ng-bind-html="logs" ng-if="logs"></pre>

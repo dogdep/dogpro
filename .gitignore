@@ -1,0 +1,7 @@
+/vendor
+/node_modules
+/.env
+/resources/vendor
+/public/build
+/docker-compose.yml
+/_ide_helper.php

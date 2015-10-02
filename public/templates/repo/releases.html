@@ -1,0 +1,43 @@
+<ul class="list-group">
+  <li ng-repeat="release in releases" class="list-group-item">
+    <div class=" content">
+      <div class="media">
+        <div class="media-left">
+          <img ng-src="{{ release.commit_info.image }}" class="media-object img-rounded" style="height: 40px"/>
+        </div>
+        <div class="media-body">
+          <div>
+            <span class="text-muted">{{ release.commit_info.shortHash }}</span> {{ release.commit_info.shortMessage }}
+
+            <div class="buttons">
+              <a ui-sref="user.repo.view.release({id: release.repo_id, release_id: release.id})" class="btn btn-link">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <div class="pull-right text-right">
+              <span class="label label-default" ng-repeat="role in release.roles">{{ role }}</span>
+              <span class="label label-warning" ng-if="release.status=='cancelled'"><i class="fa fa-times"></i> Cancelled</span>
+              <span class="label label-success" ng-if="release.status=='completed'"><i class="fa fa-check"></i> Completed</span>
+              <span class="label label-warning" ng-if="release.status=='queued'"><i class="fa fa-clock-o"></i> Queued</span>
+              <span class="label label-danger" ng-if="release.status=='error'"><i class="fa fa-exclamation-triangle"></i> Error</span>
+              <span class="label label-info" ng-if="release.status=='running'"><i class="fa fa-cog fa-spin"></i> Running</span>
+              <span class="label label-info" ng-if="release.status=='preparing'"><i class="fa fa-cog fa-spin"></i> Preparing</span>
+              <div class="text-muted time" am-time-ago="release.created_at"></div>
+            </div>
+          </div>
+          <div class="text-muted" tooltip="{{ release.commit_info.name }}">Commit by: {{ release.commit_info.name }}</div>
+        </div>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<div ng-if="!releases.length" class="release">
+  <div class="row release-info">
+    <div class="col-xs-12 text-center">
+      <p class="text-muted text-lg">No releases yet.
+        <a ui-sref="user.repo.view.commits({id: repo.id})">Create one now.</a></p>
+    </div>
+  </div>
+</div>

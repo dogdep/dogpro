@@ -1,0 +1,109 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+DOCUMENTATION = '''
+---
+module: vault
+short_description: Retrieve data from DataDog vault
+description: Retrieve data from DataDog vault
+options:
+  user:
+    description:
+      - user
+    required: true
+  host:
+    description:
+      - host
+    required: true
+author: DataDog
+'''
+
+EXAMPLES = '''
+vault: user=test host=test
+'''
+
+import socket
+import urlparse
+import os
+import urllib
+import urllib2
+import sys
+import json
+import base64
+import httplib
+import ssl
+from ansible.module_utils.basic import *
+
+# Rewrite of fetch_url to not require the module environment
+def open_url(url, data=None, headers=None, method=None, use_proxy=True,
+        force=False, last_mod_time=None, timeout=10, validate_certs=True,
+        url_username=None, url_password=None):
+    '''
+    Fetches a file from an HTTP/FTP server using urllib2
+    '''
+    handlers = []
+    parsed = urlparse.urlparse(url)
+    opener = urllib2.build_opener(*handlers)
+    urllib2.install_opener(opener)
+
+    if method:
+        if method.upper() not in ('OPTIONS','GET','HEAD','POST','PUT','DELETE','TRACE','CONNECT'):
+            raise ConnectionError('invalid HTTP request method; %s' % method.upper())
+        request = RequestWithMethod(url, method.upper(), data)
+    else:
+        request = urllib2.Request(url, data)
+
+    # user defined headers now, which may override things we've set above
+    if headers:
+        for header in headers:
+            request.add_header(header, headers[header])
+
+    if sys.version_info < (2,6,0):
+        # urlopen in python prior to 2.6.0 did not
+        # have a timeout parameter
+        r = urllib2.urlopen(request, None)
+    else:
+        r = urllib2.urlopen(request, None, timeout)
+
+    return r.read()
+
+
+VAULT_URL    = ''
+VAULT_APP_ID = ''
+VAULT_SECRET = ''
+
+if os.getenv('VAULT_URL') is not None:
+    VAULT_URL = os.environ['VAULT_URL']
+
+if os.getenv('VAULT_APP_ID') is not None:
+    VAULT_APP_ID = os.environ['VAULT_APP_ID']
+
+if os.getenv('VAULT_SECRET') is not None:
+    VAULT_SECRET = os.environ['VAULT_SECRET']
+
+
+module = AnsibleModule(
+        argument_spec=dict(
+            host=dict(required=True),
+            user=dict(required=True)
+        ),
+        supports_check_mode=False
+    )
+
+authHeader = {
+    "Authorization": "Basic " + base64.b64encode(VAULT_APP_ID + ":" + VAULT_SECRET)
+}
+query = {
+    "host": module.params['host'],
+    "user": module.params['user']
+}
+
+try:
+    print open_url(VAULT_URL + "/deployKey?" + urllib.urlencode(query), validate_certs=False, headers=authHeader)
+except urllib2.HTTPError as e:
+    if e.code == 403:
+        module.fail_json(msg="invalid key or you have no permission to access this key")
+    elif e.code == 404:
+        module.fail_json(msg="key not found")
+    else:
+        module.fail_json(msg="wrong response code"+e.code)

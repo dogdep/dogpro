@@ -1,0 +1,13 @@
+---
+
+- name: CRON | INSTALL
+  yum: name=cronie state=present
+
+- name: CRON | ENABLE
+  service: name=cronie state=started enabled=yes
+  when: ansible_distribution_version < "7"
+
+- name: CRON | ENABLE
+  service: name=crond state=started enabled=yes
+  when: ansible_distribution_version >= "7"
+

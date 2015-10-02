@@ -1,0 +1,48 @@
+---
+- name: GATHER OS SPECIFIC VARS
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../../../vars/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "../../../vars/{{ ansible_distribution }}.yml"
+    - "../../../vars/{{ ansible_os_family }}.yml"
+
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: MYSQL | ENABLE AT STARTUP
+  service: name={{mysql_service}} state=started enabled=yes
+
+- name: MYSQL | UPDATE ROOT PASSWORD
+  mysql_user: name=root host={{ item }} password={{ password }}
+  with_items:
+    - localhost
+    - 127.0.0.1
+    - ::1
+  ignore_errors: true
+
+- name: MYSQL | REMOVE ANONYMOUS USERS
+  mysql_user: name='' host=localhost state=absent login_user={{ user }} login_password={{ password }}
+  ignore_errors: true
+
+- name: MYSQL | REMOVE TEST DB
+  mysql_db: name=test state=absent login_user={{ user }} login_password={{ password }}
+  ignore_errors: true
+
+- name: MYSQL | CREATE DATABASES
+  mysql_db: name={{item}} state=present login_user={{ user }} login_password={{ password }}
+  with_items: databases
+
+- name: MYSQL | CREATE USERS
+  mysql_user: name={{item | split(':') | first}} password={{item | split(':') | last}} state=present login_user={{ user }} login_password={{ password }}
+  with_items: users
+
+- name: MYSQL | GRANT PERMISSIONS
+  mysql_user: name={{item | split(':') | first}} append_privs=yes priv={{item | split(':') | last}}.*:ALL state=present login_user={{ user }} login_password={{ password }}
+  with_items: permissions
+
+- name: MYSQL | UPDATE ROOT PASSWORD
+  mysql_user: name=root host=localhost password={{ password }}
+  ignore_errors: true

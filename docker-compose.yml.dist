@@ -1,0 +1,39 @@
+php:
+  build: docker/php
+  volumes:
+   - ".:/var/www"
+   - "storage/ssh_config:/etc/ssh/ssh_config"
+  links:
+   - mysql
+
+web:
+  image: datadoglt/nginx-laravel
+  ports:
+   - "8880:80"
+  volumes:
+     - ".:/var/www"
+     - "docker/nginx/nginx.conf:/etc/nginx/sites-enabled/laravel.conf"
+  links:
+   - php
+  environment:
+    VIRTUAL_HOST: dogpro.dev
+
+artisan:
+  build: docker/php
+  command: php /var/www/artisan queue:listen --tries=1 --timeout=360
+  volumes:
+   - ".:/var/www"
+   - "storage/ssh_config:/etc/ssh/ssh_config"
+  links:
+   - mysql
+
+mysql:
+  image: mariadb
+  env_file: .env
+  hostname: mysql
+
+webtools:
+  image: datadoglt/webtools
+  volumes_from: ["php"]
+  environment:
+    GULP_TASK: default --production

@@ -1,0 +1,23 @@
+---
+
+- name: PHP | INSTALL REPO
+  apt_repository: repo='ppa:ondrej/php5-5.6'
+
+- name: PHP | INSTALL PHP
+  apt: name={{ item }} update_cache=yes
+  with_items:
+   - php5=5.6*
+   - php5-fpm
+   - php5-intl
+   - php5-imap
+   - php5-mysqlnd
+   - php5-mcrypt
+   - php5-gd
+   - php5-json
+   - php5-curl
+   - curl
+   - git
+
+- name: PHP | INSTALL ADDITIONAL MODULES
+  apt: name={{ item }} state=present
+  with_items: "{{ modules }}"

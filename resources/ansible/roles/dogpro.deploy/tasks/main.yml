@@ -1,0 +1,87 @@
+---
+- name: GATHER OS SPECIFIC VARS
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../../../vars/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "../../../vars/{{ ansible_distribution }}.yml"
+    - "../../../vars/{{ ansible_os_family }}.yml"
+
+- name: DEPLOY | GENERATE RELEASE ID
+  shell: date '+%Y%m%d%H%M%S'
+  register: release_date
+
+- name: DEPLOY | PREVIOUS RELEASE
+  shell: "[ -d '{{ deploy_to }}/current' ] && readlink {{ deploy_to }}/current || echo ''"
+  register: prev_release
+
+- name: DEPLOY | SETTING FACTS
+  set_fact:
+    release_name: "{{ release_date.stdout }}"
+    release_dir: "{{ deploy_to }}/builds/{{ release_date.stdout }}"
+    shared_dir: "{{ deploy_to }}/shared"
+    current_dir: "{{ deploy_to }}/current"
+    previous_release: "{{ prev_release.stdout }}"
+    assets_dir: "{{ deploy_to }}/builds/{{ release_date.stdout }}{{ '/' + asset_path if asset_path != '' else '/' }}"
+    prev_assets_dir: "{{ prev_release.stdout }}{{ '/' + asset_path if asset_path != '' else '/' }}"
+
+- name: DEPLOY | SETUP
+  file: dest={{ deploy_to }}/{{ item }} state=directory mode=0755 owner={{ deploy_user }}
+  with_items:
+   - releases
+   - shared
+   - builds
+
+- name: DEPLOY | CLEANUP OLD BUILDS
+  shell: "ls -1dt {{ deploy_to }}/builds/* | xargs rm -rf"
+
+- name: DEPLOY | STARTING BUILD
+  file: path="{{ release_dir }}" state=directory owner={{ deploy_user }}
+
+- name: DEPLOY | UPLOADING CODE
+  unarchive: dest={{ release_dir }} src={{ build_tar }} owner={{ deploy_user }}
+
+- name: DEPLOY | SHARE DIRECTORIES
+  script: share_dir.sh "{{ shared_dir }}" "{{ release_dir }}" "{{ item }}" {{ deploy_user }}
+  with_items: shared_dirs
+
+- name: DEPLOY | SHARE FILES
+  script: share_file.sh "{{ shared_dir }}/{{ item }}" "{{ release_dir }}/{{ item }}" "{{ deploy_user }}"
+  with_items: shared_files
+
+- name: DEPLOY | WRITABLE FILES
+  script: writable.sh {{ www_user }} {{ deploy_user }} {{ release_dir }}/{{ item }}
+  with_items: writable
+
+- include: "{{ build_path + '/' + build_release | default('empty.yml') }}"
+
+- name: DEPLOY | RUN DEPLOY TASKS
+  include: composer.yml
+  when: "'composer' in tasks"
+
+- name: DEPLOY | BUILD ASSETS
+  script: assets.sh {{ assets_dir }} {{ prev_assets_dir }}
+
+- name: DEPLOY | MOVE BUILD TO RELEASES
+  command: "mv {{ release_dir }} {{ deploy_to }}/releases/{{ release_name }}"
+
+- name: DEPLOY | UPDATE FACTS
+  set_fact:
+    release_dir: "{{ deploy_to }}/releases/{{ release_name }}"
+
+- include: "{{ build_path + '/' + pre_release | default('empty.yml') }}"
+
+- name: DEPLOY | LINK RELEASE TO CURRENT
+  shell: "rm -rf {{ current_dir }} && ln -nfs {{ release_dir }} {{ current_dir }}"
+
+- include: "{{ build_path + '/' + post_release | default('empty.yml') }}"
+
+- name: DEPLOY | CLEANUP RELEASES
+  shell: "ls -1rd {{ deploy_to }}/releases/* | tail -n +{{ keep_releases  }} | xargs rm -rf"
+
+- name: DEPLOY | RESTORE SELINUX CONTEXT
+  shell: restorecon -R {{ release_dir }}
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
+
+- name: DEPLOY | RESTORE SELINUX CONTEXT
+  service: name={{ item }} state=reloaded
+  with_items: reload

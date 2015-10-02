@@ -1,0 +1,7 @@
+---
+
+- name: CRON | INSTALL
+  apt: name=cron state=present
+
+- name: CRON | ENABLE
+  service: name=cron state=started enabled=yes

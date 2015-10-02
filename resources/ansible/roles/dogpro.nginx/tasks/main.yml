@@ -1,0 +1,27 @@
+---
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: NGINX | ENABLE AT STARTUP
+  service: name=nginx state=started enabled=yes
+
+- name: NGINX | SITES CONFIG DIRS
+  file: dest=/etc/nginx/{{ item }} state=directory owner=root mode=0755
+  with_items:
+   - sites-available.d
+   - sites-enabled.d
+  notify: reload nginx
+
+- name: NGINX | MAIN CONFIG
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  notify: reload nginx
+
+- name: NGINX | ADITIONAL CONFIGS
+  copy: src="{{ item }}.conf" dest=/etc/nginx/conf.d/{{ item }}.conf
+  with_items: configs
+  notify: reload nginx
+
+

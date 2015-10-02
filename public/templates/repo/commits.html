@@ -1,0 +1,70 @@
+<div class="pull-right">
+  <button class="btn btn-default btn-sm" popover="{{hookPopover()}}"><i class="fa fa-info"></i> Auto update</button>
+  <button class="btn btn-default btn-sm" ng-click="refreshCommits()"><i class="fa fa-refresh"></i> Refresh commits
+  </button>
+</div>
+
+<h3>Commits</h3>
+<hr/>
+
+<div ng-if="!commits.length" class="release">
+  <div class="row release-info">
+    <div class="col-xs-12 text-center">
+      <p class="text-muted text-lg">No commits found.</p>
+    </div>
+  </div>
+</div>
+
+<ul class="list-group">
+
+  <li ng-repeat="commit in commits" class="list-group-item">
+    <div class=" content">
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#"> <img ng-src="{{ commit.image }}" class="media-object img-rounded" style="height: 40px"/> </a>
+        </div>
+        <div class="media-body">
+
+          <div class="pull-right" style="padding-left: 10px">
+            <a ng-if="repo.inventories.length" ui-sref="user.repo.view.modal.deploy({commit: commit.hash})" class="btn btn-primary">
+              <i class="fa fa-chevron-right"></i>
+            </a>
+            <span ng-if="repo.inventories.length==0" class="btn btn-primary disabled">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+          </div>
+
+          <div class="hidden-xs pull-right text-right">
+            <a ng-if="commit.release" ui-sref="user.repo.view.release({id: commit.release.repo_id, release_id: commit.release.id})">
+              <span class="label label-success" ng-if="commit.release.status=='completed'"><i class="fa fa-check"></i> Released</span>
+              <span class="label label-warning" ng-if="commit.release.status=='queued'"><i class="fa fa-clock-o"></i> Queued</span>
+              <span class="label label-danger" ng-if="commit.release.status=='error'"><i class="fa fa-exclamation-triangle"></i> Error</span>
+              <span class="label label-info" ng-if="commit.release.status=='running'"><i class="fa fa-cog fa-spin"></i> Running</span>
+              <span class="label label-info" ng-if="commit.release.status=='preparing'"><i class="fa fa-cog fa-spin"></i> Preparing</span>
+            </a>
+
+            <div class="time text-muted" am-time-ago="commit.date"></div>
+          </div>
+
+          <div>
+            <span class="text-muted">{{ commit.shortHash }}</span> {{ commit.shortMessage }}
+          </div>
+
+          <div class="text-muted">
+            <span tooltip="{{ commit.name }}">{{ commit.name }}</span>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+
+  </li>
+</ul>
+
+<ul class="pager" ng-if="commits.length">
+  <li><a ui-sref="user.repo.view.commits({page: prevPage()})" ng-if="prevPage()">Previous</a></li>
+  <li><a ui-sref="user.repo.view.commits({page: nextPage()})">Next</a></li>
+</ul>

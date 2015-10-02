@@ -1,0 +1,29 @@
+<h1 class="title">SSH Keys</h1>
+
+<form method="post" ng-submit="save()">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="form-group">
+                <input class="form-control" id="container" ng-model="key.id" placeholder="Hostname" type="text"/>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <textarea ng-model="key.content" class="form-control" placeholder="Paste key here" rows="1"></textarea>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <button type="submit" class="btn btn-block btn-success"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+</form>
+
+<ul class="list-group list-commands">
+    <li ng-repeat="key in keys track by key.id" class="list-group-item">
+        <div class="content">
+            <button class="btn btn-link pull-right" ng-click="delete(key)"><i class="fa fa-times"></i></button>
+            <strong>{{ key.id }}</strong>
+            <div class="text-muted">{{key.host}}</div>
+        </div>
+    </li>
+</ul>

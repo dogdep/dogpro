@@ -1,0 +1,11 @@
+site: default
+type: default
+html_root: /var/www
+domain_name: null
+php_fpm: 127.0.0.1:9000
+default: false
+ssl_enable: false
+ssl_crt: ~
+ssl_key: ~
+ssl_ciphers: "HIGH:!aNULL:!MD5"
+ssl_protocols: "TLSv1 TLSv1.1 TLSv1.2"

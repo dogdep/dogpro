@@ -1,0 +1,72 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" ng-init="isCollapsed=true" ng-click="isCollapsed=!isCollapsed">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref="user.repo.index">
+                <object height="40px" data="/build/img/logo.svg" type="image/svg+xml"></object>
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse" collapse="isCollapsed">
+            <ul class="nav navbar-nav" ng-click="isCollapsed=true">
+                <li><a ui-sref="user.repo.create">New project</a></li>
+                <li><a ui-sref="user.keys" ng-if="user.admin">Manage keys</a></li>
+                <li><a ui-sref="user.docs.roles">Documentation</a></li>
+            </ul>
+
+            <div dp-logout></div>
+        </div>
+    </div>
+</nav>
+
+<div class="container container-main">
+    <div class="row">
+        <div class="col-md-3 sidebar" ng-init="isSidebarCollapsed=true">
+            <form class="hidden-sm hidden-xs">
+                <input type="text" class="form-control" ng-model="filter.name" placeholder="Filter projects"/>
+                <span class="fa fa-arrow-right form-control-feedback"></span>
+            </form>
+
+            <div class="visible-sm visible-xs hidden-lg selector" ng-click="isSidebarCollapsed=!isSidebarCollapsed">
+                <div>
+                    <span ng-if="getActive() && isSidebarCollapsed">
+                        {{ getActive().group }} / {{ getActive().name }}
+                    </span>
+                    <span ng-if="!getActive() || !isSidebarCollapsed">
+                        Choose project
+                    </span>
+
+                    <div class="pull-right text-muted">
+                        <i class="fa" ng-class="{'fa-chevron-down':isSidebarCollapsed,'fa-chevron-up':!isSidebarCollapsed}"></i>
+                    </div>
+                </div>
+            </div>
+
+           <div collapse="isSidebarCollapsed" class="nav-collapse-md" ng-click="isSidebarCollapsed=true">
+               <ul class="nav">
+                   <li ng-repeat="repo in repos|filter:filter as results track by repo.id">
+                       <a ng-class="{active: isActive(repo)}" ui-sref="user.repo.view.commits({id: repo.id})">
+                           {{ repo.group ? repo.group + ' /' : '' }}  {{ repo.name }}
+                       </a>
+                   </li>
+                   <li ng-if="!results.length">
+                       <span class="text-muted">No repositories found...</span>
+                   </li>
+               </ul>
+
+               <a class="btn btn-link btn-block" ui-sref="user.repo.create">
+                   <i class="fa fa-plus"></i> Add new repository
+               </a>
+
+               <hr class="visible-md">
+           </div>
+
+        </div>
+        <div ui-view class="col-md-9 anim-in-out anim-slide-below-fade" data-anim-speed="500" data-anim-sync="true"></div>
+    </div>
+</div>

@@ -1,0 +1,2 @@
+user: "{{ global.deploy_user }}"
+jobs: []

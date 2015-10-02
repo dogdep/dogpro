@@ -1,0 +1,43 @@
+---
+- name: PHP | CHECK REMI REPO
+  yum: name=remi-release state=present
+  register: find_remi
+  ignore_errors: true
+
+- debug: msg="DEBUG centos {{ ansible_distribution_version }}"
+
+- name: PHP | INSTALL REMI
+  yum: name=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm state=present
+  when: find_remi|failed and ansible_distribution == "CentOS" and ansible_distribution_version >= "7"
+
+- name: PHP | INSTALL REMI
+  yum: name=http://rpms.famillecollet.com/enterprise/remi-release-6.rpm state=present
+  when: find_remi|failed and ansible_distribution == "CentOS" and ansible_distribution_version < "7"
+
+- name: PHP | INSTALL DEFAULT MODULES
+  yum: name={{ item }} state=present enablerepo=remi,remi-php56
+  with_items:
+    - php-cli
+    - php-process
+    - php-imap
+    - php-xml
+    - php-soap
+    - php-common
+    - php-fpm
+    - php-pdo
+    - php-mysqlnd
+    - php-mcrypt
+    - php-mbstring
+    - php-bcmath
+    - php-mbstring
+    - php-intl
+    - php-gd
+    - php-pecl-jsonc
+    - php-opcache
+    - git
+  notify: restart php-fpm
+
+- name: PHP | INSTALL ADDITIONAL MODULES
+  yum: name={{ item }} state=present enablerepo=remi,remi-php56
+  with_items: "{{ modules }}"
+

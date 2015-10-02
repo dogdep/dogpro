@@ -1,0 +1,6 @@
+---
+- name: BEANSTALKD | INSTALL
+  yum: name=http://cbs.centos.org/kojifiles/packages/beanstalkd/1.9/3.el7/x86_64/beanstalkd-1.9-3.el7.x86_64.rpm state=present
+
+- name: BEANSTALKD | ENABLE
+  service: name=beanstalkd state=started enabled=yes

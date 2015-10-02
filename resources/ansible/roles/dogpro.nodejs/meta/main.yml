@@ -1,0 +1,6 @@
+name: Install nodejs
+variables:
+    install:
+        name: Packages to install
+        desc: Comma separated package names
+        type: array

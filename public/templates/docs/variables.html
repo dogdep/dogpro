@@ -1,0 +1,56 @@
+<h2>Global variables <small>(available in any task)</small></h2>
+<hr />
+
+<ul>
+  <li><code>project_name</code> repository name</li>
+  <li><code>inventory_name</code> inventory name</li>
+  <li><code>global</code> Repository name</li>
+  <li><code>build_path</code> path to build on <b>dogpro</b></li>
+  <li><code>build_version</code> commit hash</li>
+  <li><code>build_version_short</code> commit short hash</li>
+</ul>
+
+<hr>
+<h2>Deploy variables <small>(available in dogpro.deploy playbook)</small></h2>
+<hr />
+
+<ul>
+  <li><code>release_name</code> release id (20150101153030)</li>
+  <li><code>release_dir</code> path to release in remote server</li>
+  <li><code>shared_dir</code> path to shared directory in remote server</li>
+  <li><code>current_dir</code> current release dir (/var/www/current)</li>
+  <li><code>previous_release</code> path to previous release</li>
+  <li><code>assets_dir</code> path to assets directory</li>
+  <li><code>prev_assets_dir</code> path to previous release assets directory</li>
+</ul>
+
+<hr>
+<h2>Distro specific variables <small>(value depends on host distro)</small></h2>
+<hr>
+<table class="table table-bordered">
+  <tr>
+    <th>Variable</th>
+    <th>RHEL</th>
+    <th>Ubuntu</th>
+  </tr>
+  <tr>
+    <td><code>php_pool_file</code></td>
+    <td><code>/etc/php-fpm.d/www.conf</code></td>
+    <td><code>/etc/php5/fpm/pool.d/www.conf</code></td>
+  </tr>
+  <tr>
+    <td><code>php_fpm_service</code></td>
+    <td><code>php-fpm</code></td>
+    <td><code>php5-fpm</code></td>
+  </tr>
+  <tr>
+    <td><code>php_ini</code></td>
+    <td><code>/etc/php.ini</code></td>
+    <td><code>[/etc/php5/cli/php.ini, /etc/php5/fpm/php.ini]</code></td>
+  </tr>
+  <tr>
+    <td><code>mysql_service</code></td>
+    <td><code>mysqld</code></td>
+    <td><code>mysql</code></td>
+  </tr>
+</table>

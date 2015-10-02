@@ -1,0 +1,43 @@
+@scroll-w: 6px;
+.scrollable {
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: @scroll-w;
+  }
+
+  &::-webkit-scrollbar-track {
+
+    border-radius: @scroll-w;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: @scroll-w;
+    background: rgba(0,0,0,0.5);
+  }
+}
+.splash {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: white url(/build/img/splash.png) no-repeat 50% 116px;
+}
+.splash.fade {
+  transition: opacity .4s;
+  opacity: 0;
+}
+
+.form-control-feedback.fa {
+  right: 10px;
+  line-height: 34px;
+}
+
+.modal-footer {
+  .pull-left .checkbox {
+    margin-left: 30px;
+  }
+}

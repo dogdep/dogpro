@@ -1,0 +1,34 @@
+.navbar.navbar-default {
+  border-bottom: 7px solid @brand-main;
+
+  .navbar-brand {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    object {
+      pointer-events: none;
+    }
+  }
+
+  .user-image {
+    margin-top: 14px;
+    height: 34px;
+  }
+}
+
+.nav-tabs {
+  margin-bottom: 15px;
+
+  li.active {
+    a, a:hover, a:active, a:focus  {
+      border: 1px solid transparent;
+      border-bottom: 1px solid @brand-main;
+    }
+  }
+  li a {
+    &:hover, &:active, &:focus {
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: 1px solid @brand-main;
+    }
+  }
+}

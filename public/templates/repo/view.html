@@ -1,0 +1,23 @@
+<ul class="nav nav-tabs">
+    <li ng-class="{active: $state.is('user.repo.view.commits')}">
+        <a ui-sref="user.repo.view.commits({id: repo.id})"><i class="fa fa-fw fa-code-fork"></i> Commits</a>
+    </li>
+    <li ng-class="{active: $state.is('user.repo.view.inventory')}">
+        <a ui-sref="user.repo.view.inventory({id: repo.id})"><i class="fa fa-fw fa-cubes"></i> Inventory</a>
+    </li>
+    <li ng-class="{active: $state.is('user.repo.view.settings')}">
+        <a ui-sref="user.repo.view.settings({id: repo.id})"><i class="fa fa-fw fa-cog"></i> Settings</a>
+    </li>
+    <li ng-class="{active: $state.is('user.repo.view.releases') || $state.is('user.repo.view.release')}">
+        <a ui-sref="user.repo.view.releases({id: repo.id})"><i class="fa fa-fw fa-cog"></i> Releases</a>
+    </li>
+</ul>
+
+<div ng-if="repo.inventories.length==0 && !$state.is('user.repo.view.inventory')">
+    <div class="alert alert-warning">
+        <i class="fa fa-fw fa-exclamation-circle"></i> No inventories yet.
+    </div>
+    <hr>
+</div>
+
+<div ui-view class="anim-in-out anim-slide-below-fade" data-anim-speed="500" data-anim-sync="true"></div>

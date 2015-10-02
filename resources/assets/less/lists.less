@@ -1,0 +1,89 @@
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin:0;
+
+  li {
+    padding: 5px 10px;
+
+    &.separated {
+      border-top: 1px solid @hr-border;
+      border-bottom: 1px solid @hr-border;
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:first-child:not(:only-child) {
+        border-top: 0;
+      }
+    }
+
+    &.title {
+      font-weight: bold;
+      font-size: @font-size-large;
+    }
+
+    &.stats {
+      text-align: center;
+    }
+  }
+}
+
+ul.list-group {
+  li {
+    padding: 0;
+    background: #f7f7f7;
+    border: 0;
+    margin-bottom: 10px;
+    border-radius: @border-radius-base;
+    min-height: 40px;
+
+    .time {
+      margin-top: 2px;
+      margin-right: 2px;
+      font-size: 13px;
+    }
+
+    .content {
+      min-height: 20px;
+      padding: 10px;
+    }
+
+    .hr {
+      border-top: 1px solid @hr-border;
+    }
+
+    .form-horizontal {
+      padding-bottom: 1px;
+    }
+
+    .form-group:first-child {
+      margin-top: 15px;
+    }
+  }
+
+  .buttons {
+    float: right;
+    padding-left: 10px;
+  }
+}
+
+
+.col-buttons {
+  text-align: right;
+  border-left: 1px solid @hr-border;
+  padding: 3px 0 3px 12px;
+  min-height: 40px;
+
+  .btn {
+    outline: none;
+  }
+}
+
+ul.list-group.list-commands li {
+  border: 1px solid #ccc;
+}

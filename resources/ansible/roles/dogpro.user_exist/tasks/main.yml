@@ -1,0 +1,4 @@
+---
+
+- name: USER | EXIST
+  user: name={{ user }} state=present

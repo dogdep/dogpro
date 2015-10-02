@@ -1,0 +1,4 @@
+php_pool_file: /etc/php5/fpm/pool.d/www.conf
+php_fpm_service: php5-fpm
+php_ini: [/etc/php5/cli/php.ini, /etc/php5/fpm/php.ini]
+mysql_service: mysql

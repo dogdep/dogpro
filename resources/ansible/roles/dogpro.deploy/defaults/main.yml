@@ -1,0 +1,13 @@
+tasks: [default, composer]
+deploy_to: /var/www
+keep_releases: 5
+shared_dirs: []
+shared_files: []
+writable: []
+composer_dir:
+www_user: www
+deploy_user: www
+build_release: false
+pre_release: false
+post_release: false
+reload: [php-fpm, nginx]

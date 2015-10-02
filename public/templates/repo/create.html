@@ -1,0 +1,36 @@
+<h1>Add new project</h1>
+
+<form ng-submit="create()" class="form-horizontal">
+
+    <div class="form-group">
+        <label for="url" class="col-sm-3 control-label">Git URL</label>
+        <div class="col-sm-7">
+            <input class="form-control" type="text" id="url" placeholder="GIT URL..." ng-model="repo.url"
+                    required title="This must be a valid GIT URL"
+                    pattern="(?:git|ssh|https?|git@[\w\.]+):(?:\/\/)?[\w\.@:\/~_-]+\.git\/?">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="group" class="col-sm-3 control-label">Group</label>
+        <div class="col-sm-7">
+            <input class="form-control" type="text" placeholder="repository group..." id="group"
+                    dp-project-group="repo.url" title="This must be a alphanumeric value"
+                    ng-model="repo.group" required pattern="[a-zA-Z0-9]*">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="name" class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-7">
+            <input class="form-control" type="text" placeholder="repository name..." id="name"
+                    dp-project-name="repo.url" title="This must be a alphanumeric value"
+                    ng-model="repo.name" required pattern="[a-zA-Z0-9]+">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-7">
+            <button class="btn btn-success" type="submit">Add new project</button>
+        </div>
+    </div>
+
+</form>

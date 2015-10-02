@@ -1,0 +1,4 @@
+---
+
+- name: REDIS | INSTALL
+  apt: name=redis state=present
