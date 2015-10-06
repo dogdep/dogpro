@@ -82,6 +82,10 @@
   shell: restorecon -R {{ release_dir }}
   when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
 
-- name: DEPLOY | RESTORE SELINUX CONTEXT
+- name: DEPLOY | RELOAD SERVICES
   service: name={{ item }} state=reloaded
   with_items: reload
+
+- name: DEPLOY | RESTART SERVICES
+  service: name={{ item }} state=restarted
+  with_items: restart

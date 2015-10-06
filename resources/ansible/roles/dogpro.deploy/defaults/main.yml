@@ -11,3 +11,4 @@ build_release: false
 pre_release: false
 post_release: false
 reload: [php-fpm, nginx]
+restart: []
