@@ -15,5 +15,4 @@
     day: "{{ item.day|default('*') }}"
     hour: "{{ item.hour|default('*') }}"
     minute: "{{ item.minute|default('*') }}"
-    special_time: "{{ item.special_time|default() }}"
   with_items: "{{ jobs }}"
