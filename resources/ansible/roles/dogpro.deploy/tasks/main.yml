@@ -85,7 +85,9 @@
 - name: DEPLOY | RELOAD SERVICES
   service: name={{ item }} state=reloaded
   with_items: reload
+  ignore_errors: true
 
 - name: DEPLOY | RESTART SERVICES
   service: name={{ item }} state=restarted
   with_items: restart
+  ignore_errors: true
