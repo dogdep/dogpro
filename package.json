@@ -1,0 +1,13 @@
+{
+  "name": "dogdep.github.io",
+  "version": "0.0.1",
+  "license": "MIT",
+  "homepage": "https://dogdep.github.io/",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "2.4.2",
+    "gulp-uglify": "1.1.0",
+    "gulp-expect-file": "0.0.7",
+    "gulp-less": "2.0.1"
+  }
+}

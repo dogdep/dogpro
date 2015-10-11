@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>DogPro - Deployment NG</title>
+
+  <link rel="icon" href="/favicon.png">
+  <link rel="stylesheet" href="/build/app.css">
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:300,600' rel='stylesheet' type='text/css'>
+  <script src="/build/app.js"></script>
+  <script src="/build/vendor.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><img src="/img/icon.png" alt="DogPro"> DogPro</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://github.com/dogdep/dogpro/tree/master/docs/readme.md">Documentation</a></li>
+        <li><a href="https://github.com/dogdep/dogpro">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>
+      Deployment for teams
+    </h1>
+    <p class="text-muted">
+      Centralised deployment for your projects
+    </p>
+    <p><a class="btn btn-warning btn-lg" href="https://github.com/dogdep/dogpro/tree/master/docs/readme.md">Learn more</a></p>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <i class="fa fa-fw fa-map-signs fa-5x pull-left"></i>
+        <h2>Single way to deploy</h2>
+        <p class="text-muted">Single way, single place to deploy your applications.</p>
+        <div class="clearfix"></div>
+      </div>
+      <hr class="hidden-md visible-xs visible-sm">
+      <div class="col-md-6">
+        <i class="fa fa-fw fa-clock-o fa-5x pull-left"></i>
+        <h2>Zero downtime deployments</h2>
+        <p class="text-muted">DogPro ensures no downtime during deployment</p>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section bg-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <i class="fa fa-fw fa-code-fork fa-5x pull-left"></i>
+        <h2>Release any commit</h2>
+        <p class="text-muted">Select commit you want to release.</p>
+        <div class="clearfix"></div>
+      </div>
+      <hr class="hidden-md visible-xs visible-sm">
+      <div class="col-md-6">
+        <i class="fa fa-fw fa-cogs fa-5x pull-left"></i>
+        <h2>Update server configuration</h2>
+        <p class="text-muted">Use Ansible power in beautiful UI.</p>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <h2 class="text-center">Simple configuration</h2>
+        <hr>
+        <div class="code">
+          <div class="header">
+            <span>DOGPRO.YML</span>
+          </div>
+<pre><code class="yaml">defaults:
+  deploy_dir: "/var/www/some-project"
+
+plays:
+
+  - name: "NGINX server"
+    role: dogpro.nginx
+
+  - name: "NGINX config"
+    role: dogpro.nginx_site
+    type: symfony
+
+  - name: "Install MySQL"
+    role: dogpro.mysql
+
+  - name: "PHP 5.6"
+    role: dogpro.php56
+    modules:
+     - "php-redis"
+
+  - name: "NodeJS"
+    role: dogpro.nodejs
+
+  - name: "Redis master"
+    role: dogpro.redis
+
+  - name: "Deploy"
+    role: dogpro.deploy
+    shared_dirs:
+      - "app/logs"
+      - "uploads"
+</code></pre>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section bg-deep-blue">
+  <div class="container text-center">
+    <h2>It's free and open source!</h2>
+
+    <a href="https://github.com/dogdep/dogpro/tree/master/docs/installation.md" class="btn btn-danger">See installation guide</a>
+  </div>
+</div>
+
+<div class="section bg-gray">
+  <div class="container">
+    <div class="col-md-4">
+      <h3>Release any version!</h3>
+      <p>It's easy to just release any commit you want:</p>
+      <ul>
+        <li>Choose commit to release</li>
+        <li>Select servers to deploy to</li>
+        <li>Watch as your release goes</li>
+      </ul>
+    </div>
+    <div class="col-md-8">
+      <img src="/img/preview1.png" alt="" class="img-responsive">
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="col-md-8">
+      <img src="/img/preview2.png" alt="" class="img-responsive">
+    </div>
+    <div class="col-md-4">
+      <h3>Watch your release happen</h3>
+      <p>Real time deployment information:</p>
+      <ul>
+        <li>We're using pusher.io to stream release log live</li>
+        <li>Live setup output</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="section bg-gray">
+  <div class="container">
+    <div class="col-md-4">
+      <h3>Other features</h3>
+      <p>Using DogPro also gives you:</p>
+      <ul>
+        <li>Full release history</li>
+        <li>Ability to deploy configurations</li>
+        <li>Custom deployment scripts</li>
+        <li>All the ansible greatness in beautiful UI</li>
+      </ul>
+    </div>
+    <div class="col-md-8">
+      <img src="/img/preview3.png" alt="" class="img-responsive">
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

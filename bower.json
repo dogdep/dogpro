@@ -1,0 +1,20 @@
+{
+  "name": "dogdep.github.io",
+  "version": "0.0.1",
+  "homepage": "https://dogdep.github.io/",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "font-awesome": "fontawesome#~4.4.0",
+    "highlightjs": "~8.8.0",
+    "owl-carousel": "~1.3.2",
+    "owl.carousel": "owl-carousel2#~2.0.0-beta.3"
+  }
+}
