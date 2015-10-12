@@ -1,20 +1,24 @@
 ---
 
 - name: NODEJS | CHECK IF NODE IS INSTALLED
-  stat: path=/usr/bin/node
-  register: node
+  shell: node -v
+  register: node_check
+  ignore_errors: true
+
+- set_fact:
+    arch: "{{ (ansible_architecture == 'x86_64') | ternary('x64', 'x86')}}"
 
 - name: NODEJS | DOWNLOAD
-  get_url: dest=/opt/node.tar.gz url=http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz
-  when: node.stat.exists == false
+  get_url: dest=/opt/node.tar.gz url=http://nodejs.org/dist/{{ version }}/node-{{ version }}-linux-{{ arch }}.tar.gz
+  when: node_check|failed
 
 - name: NODEJS | UNPACK
   unarchive: src=/opt/node.tar.gz dest=/opt copy=no
-  when: node.stat.exists == false
+  when: node_check|failed
 
 - name: NODEJS | LINK BINARIES
-  file: dest="/usr/bin/{{ item}}" src="/opt/node-v0.12.5-linux-x64/bin/{{ item }}" state=link
-  when: node.stat.exists == false
+  file: dest="/usr/bin/{{ item}}" src="/opt/node-{{ version }}-linux-{{ arch }}/bin/{{ item }}" state=link
+  when: node_check|failed
   with_items:
    - npm
    - node

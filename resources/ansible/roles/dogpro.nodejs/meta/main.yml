@@ -4,3 +4,7 @@ variables:
         name: Packages to install
         desc: Comma separated package names
         type: array
+    version:
+        name: Node version to install
+        desc: Version of NodeJS
+        type: string
