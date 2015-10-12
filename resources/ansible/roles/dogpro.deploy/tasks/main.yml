@@ -68,19 +68,16 @@
   set_fact:
     release_dir: "{{ deploy_to }}/releases/{{ release_name }}"
 
+- name: DEPLOY | RESTORE SELINUX CONTEXT
+  shell: restorecon -R {{ release_dir }}
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
+
 - include: "{{ build_path + '/' + pre_release | default('empty.yml') }}"
 
 - name: DEPLOY | LINK RELEASE TO CURRENT
   shell: "rm -rf {{ current_dir }} && ln -nfs {{ release_dir }} {{ current_dir }}"
 
 - include: "{{ build_path + '/' + post_release | default('empty.yml') }}"
-
-- name: DEPLOY | CLEANUP RELEASES
-  shell: "ls -1rd {{ deploy_to }}/releases/* | tail -n +{{ keep_releases  }} | xargs rm -rf"
-
-- name: DEPLOY | RESTORE SELINUX CONTEXT
-  shell: restorecon -R {{ release_dir }}
-  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
 
 - name: DEPLOY | RELOAD SERVICES
   service: name={{ item }} state=reloaded
@@ -91,3 +88,6 @@
   service: name={{ item }} state=restarted
   with_items: restart
   ignore_errors: true
+
+- name: DEPLOY | CLEANUP RELEASES
+  shell: "ls -1rd {{ deploy_to }}/releases/* | tail -n +{{ keep_releases  }} | xargs rm -rf"
