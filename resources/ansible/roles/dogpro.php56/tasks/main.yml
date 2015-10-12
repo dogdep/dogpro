@@ -41,6 +41,6 @@
   notify: reload php-fpm
 
 - name: PHP | SET PHP INI PARAMS
-  lineinfile: dest={{ php_ini }} regexp='^;?{{ item[1].key }} *=.*$' line="{{ item[1].key }}={{ item[1].value }}"
-  with_nested: params
+  lineinfile: dest={{ php_ini }} regexp='^;?{{ item.key }} *=.*$' line="{{ item.key }}={{ item.value }}"
+  with_dict: params
   notify: reload php-fpm

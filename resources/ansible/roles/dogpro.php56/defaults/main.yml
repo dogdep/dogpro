@@ -2,4 +2,4 @@ timezone: UTC
 user: www
 group: www
 modules: []
-params: []
+params: {}
