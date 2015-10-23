@@ -30,6 +30,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
     public function handle(Pusher $pusher)
     {
         $timeStarted = time();
+        $key = $this->writePrivateKey();
 
         try {
             $this->release->resetLogs();
@@ -38,7 +39,9 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $this->release->path(),
                 $this->release->inventoryFilename(),
                 $this->release->playbookFilename(),
-                $this->release->inventory->params
+                $this->release->inventory->params + [
+                    'private_key' => $key,
+                ]
             );
 
             $process = $ansible->play();
@@ -61,6 +64,8 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $process->stop(0);
             }
 
+            @unlink($key);
+
             $this->updateRelease($process);
 
             if ($this->release->status == Release::CANCELLED) {
@@ -77,8 +82,20 @@ class PlaybookJob implements ShouldQueue, SelfHandling
             $this->release->logger()->error("Ansible run failed");
             $this->release->update(['status' => Release::ERROR, 'time'=>time()-$timeStarted]);
             $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+
+            @unlink($key);
             throw $e;
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function writePrivateKey()
+    {
+        $file = tempnam(sys_get_temp_dir(), "key");
+        @file_put_contents($file, $this->release->inventory->private_key);
+        return $file;
     }
 
     private function wasCancelled()

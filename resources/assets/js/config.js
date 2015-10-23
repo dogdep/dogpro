@@ -67,23 +67,13 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
                 }
             }
         })
-        .state('user.keys', {
-            url: "keys",
-            controller: "KeysCtrl",
-            templateUrl: '/templates/keys/keys.html',
-            resolve: {
-                keys: function(api) {
-                    return api.keys.query().$promise;
-                }
-            }
-        })
         .state('user.docs', {
             url: "docs",
             templateUrl: '/templates/docs/docs.html',
             controller: 'DocsCtrl',
             resolve: {
                 roleConfig: function (api) {
-                    return api.roles.all().$promise;
+                    return api.roles.get().$promise;
                 }
             }
         })
@@ -123,7 +113,12 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
         .state('user.repo.create', {
             url: "/create",
             controller: "RepoCreateCtrl",
-            templateUrl: "/templates/repo/create.html"
+            templateUrl: "/templates/repo\/create.html",
+            resolve: {
+                config: function(api) {
+                    return api.config.get().$promise;
+                }
+            }
         })
         .state('user.repo.view', {
             url: "/:id",

@@ -17,14 +17,13 @@ use Gitonomy\Git\Repository;
  * @property Release[] releases
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|Release[] $releases
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereUrl($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereGroup($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereParams($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Repo whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereUrl($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereGroup($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereParams($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Repo whereUpdatedAt($value)
  */
 class Repo extends Model
 {
@@ -70,7 +69,7 @@ class Repo extends Model
     public function git()
     {
         if (is_dir($this->repoPath()) && is_null($this->repo)) {
-            $this->repo = new Repository($this->repoPath());
+            $this->repo = new Repository($this->repoPath(), config('git.options'));
         }
 
         return $this->repo;

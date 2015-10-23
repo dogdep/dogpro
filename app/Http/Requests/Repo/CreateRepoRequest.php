@@ -10,7 +10,7 @@ class CreateRepoRequest extends Request
     public function rules()
     {
         return [
-            'url' => 'required|git_url',
+            'url' => 'required|git_url|unique:repos,url',
             'name' => 'required|max:255',
             'group' => 'string|max:255',
         ];

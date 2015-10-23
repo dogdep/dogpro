@@ -43,9 +43,12 @@
         <div class="content">
             <div><strong><i class="fa fa-building fa-fw"></i> {{ inv.name }}</strong></div>
         </div>
-
         <div collapse="!inventoryCollapse[i]" class="hr">
             <div class="content">
+                <div class="form-group">
+                    <label for="deploy_key_{{inv.id}}">Generated deployment key</label>
+                    <textarea id="deploy_key_{{inv.id}}" class="form-control" readonly rows="4" onclick="this.select()">{{inv.public_key}}</textarea>
+                </div>
                 <div class="form-group">
                     <textarea class="form-control" ng-model="inv.inventory" title="Inventory"></textarea>
                     <div class="checkbox">

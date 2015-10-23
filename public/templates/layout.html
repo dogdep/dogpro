@@ -15,7 +15,6 @@
         <div class="collapse navbar-collapse" collapse="isCollapsed">
             <ul class="nav navbar-nav" ng-click="isCollapsed=true">
                 <li><a ui-sref="user.repo.create">New project</a></li>
-                <li><a ui-sref="user.keys" ng-if="user.admin">Manage keys</a></li>
                 <li><a ui-sref="user.docs.roles">Documentation</a></li>
             </ul>
 
@@ -65,7 +64,6 @@
 
                <hr class="visible-md">
            </div>
-
         </div>
         <div ui-view class="col-md-9 anim-in-out anim-slide-below-fade" data-anim-speed="500" data-anim-sync="true"></div>
     </div>

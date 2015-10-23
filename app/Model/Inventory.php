@@ -1,5 +1,8 @@
 <?php namespace App\Model;
 
+use App\Git\SSH;
+use phpseclib\Crypt\RSA;
+
 /**
  * Class Inventory
  *
@@ -11,6 +14,9 @@
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read Repo $repo
+ * @property  string $public_key
+ * @property  string $private_key
+ * @method static Inventory[] all()
  * @method static \Illuminate\Database\Query\Builder|\App\Model\Inventory whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Model\Inventory whereRepoId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Model\Inventory whereInventory($value)
@@ -24,7 +30,12 @@ class Inventory extends Model
     /**
      * @var array
      */
-    protected $fillable = ['inventory', 'name', 'repo_id', 'params'];
+    protected $fillable = ['inventory', 'name', 'repo_id', 'params', 'private_key', 'public_key'];
+
+    /**
+     * @var array
+     */
+    protected $hidden = ['private_key'];
 
     /**
      * Use this in we'll need to modify contents
@@ -34,6 +45,15 @@ class Inventory extends Model
     public function render()
     {
         return (string) $this->inventory;
+    }
+
+    public function save(array $options = [])
+    {
+        if (empty($this->public_key) || empty($this->private_key)) {
+            $this->generateKeys();
+        }
+
+        return parent::save($options);
     }
 
     /**
@@ -65,5 +85,12 @@ class Inventory extends Model
         if ($value) {
             $this->attributes['params'] = json_encode($value);
         }
+    }
+
+    protected function generateKeys()
+    {
+        $key = SSH::generateKeyPair(sprintf("%s@dogpro", $this->name));
+        $this->public_key = $key['publickey'];
+        $this->private_key = $key['privatekey'];
     }
 }

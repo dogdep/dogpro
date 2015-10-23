@@ -17,7 +17,7 @@
         };
 
         $scope.delete = function(key) {
-            key.$delete(function (){
+            key.$delete(function () {
                 toaster.pop("success", "Key deleted");
                 for (var i=0; i<keys.length; i++) {
                     if (keys[i].id == key.id) {
