@@ -87,6 +87,7 @@ return [
 
     'ansible_role' => 'Role not found!',
     'at_least' => 'Too few items selected!',
+    'git_url' => 'Cannot access GIT repository',
 
     /*
     |--------------------------------------------------------------------------

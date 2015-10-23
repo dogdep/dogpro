@@ -3,12 +3,9 @@
 use App\Exceptions\VaultException;
 use App\Http\Requests\Inventory\CreateInventory;
 use App\Http\Requests\Inventory\UpdateInventory;
-use App\Jobs\Ssh\RegenerateSshConfig;
 use App\Model\Inventory;
 use App\Model\Repo;
 use App\Services\VaultService;
-use GuzzleHttp\Client;
-use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 /**
@@ -58,8 +55,6 @@ class InventoryController extends Controller
             'params' => $request->get('params'),
         ]);
 
-        $this->dispatch(new RegenerateSshConfig());
-
         return $inv;
     }
 
@@ -85,8 +80,6 @@ class InventoryController extends Controller
             'name' => $request->get('name'),
             'params' => $request->get('params'),
         ]);
-
-        $this->dispatch(new RegenerateSshConfig());
 
         return $inv;
     }

@@ -9,13 +9,14 @@
         "laravel/framework": "5.1.*",
         "gitonomy/gitlib": "~0.1.7",
         "pda/pheanstalk": "~3.0",
-        "tymon/jwt-auth": "0.5.*",
+        "tymon/jwt-auth": "dev-develop",
         "symfony/yaml": "^2.7.1",
         "maknz/slack": "dev-master",
         "barryvdh/laravel-ide-helper": "^2.0@dev",
         "pusher/pusher-php-server": "dev-master",
         "doctrine/dbal": "*",
-        "laravel/socialite": "*"
+        "laravel/socialite": "*",
+        "phpseclib/phpseclib": "2.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

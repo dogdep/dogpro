@@ -39,7 +39,7 @@ class CloneRepoJob extends Job implements ShouldQueue, SelfHandling
             throw new \RuntimeException(sprintf("Cannot create repo dir %s", $path));
         }
 
-        Admin::cloneTo($path, $this->repo->url);
+        Admin::cloneTo($path, $this->repo->url, true, config('git.options'));
         $this->repo->git()->run('config', ['remote.origin.fetch', 'refs/heads/*:refs/heads/*']);
     }
 }

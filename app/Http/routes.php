@@ -39,14 +39,10 @@ Route::group(['prefix'=>'api', 'middleware' => 'jwt.auth'], function() {
         Route::delete('/{inventory}', 'InventoryController@delete');
     });
 
-    Route::get('/roles/all', 'RepoController@roles');
+    Route::get('roles', 'RepoController@roles');
+    Route::get('config', 'ConfigController@get');
+
     Route::group(['prefix'=>'user', 'middleware'=>'auth.admin'], function() {
         Route::get('', 'UserController@all');
-    });
-
-    Route::group(['prefix'=>'keys', 'middleware'=>'auth.admin'], function() {
-        Route::get('', 'KeysController@index');
-        Route::post('{host}', 'KeysController@create');
-        Route::delete('{key}', 'KeysController@delete');
     });
 });

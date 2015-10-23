@@ -2,7 +2,6 @@ php:
   build: docker/php
   volumes:
    - ".:/var/www"
-   - "storage/ssh_config:/etc/ssh/ssh_config"
   links:
    - mysql
 
@@ -20,10 +19,10 @@ web:
 
 artisan:
   build: docker/php
+  user: www
   command: php /var/www/artisan queue:listen --tries=1 --timeout=360
   volumes:
    - ".:/var/www"
-   - "storage/ssh_config:/etc/ssh/ssh_config"
   links:
    - mysql
 

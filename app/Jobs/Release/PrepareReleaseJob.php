@@ -94,7 +94,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             throw new ReleaseException($this->release, "Cannot remove existing release!");
         }
 
-        if (!$this->fs()->makeDirectory($releaseDir, 0777, true) || !chmod($releaseDir, 0777)) {
+        if (!$this->fs()->makeDirectory($releaseDir, 0777, true, true) || !chmod($releaseDir, 0777)) {
             throw new ReleaseException($this->release, "Cannot create release dir!");
         }
 

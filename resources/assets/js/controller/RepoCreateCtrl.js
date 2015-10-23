@@ -3,8 +3,9 @@
         .module('dp')
         .controller("RepoCreateCtrl", ctrl);
 
-    function ctrl($scope, api, repos, toaster, $state) {
+    function ctrl($scope, api, repos, toaster, $state, config) {
         $scope.repo = new api.repos;
+        $scope.publicKey = config.public_key;
 
         $scope.create = function() {
             $scope.repo.$save(function(repo) {

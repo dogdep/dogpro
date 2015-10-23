@@ -1,5 +1,12 @@
-<h1>Add new project</h1>
+<h3 class="text-center">1. Add deployment key</h3>
+<div class="row">
+  <div class="col-md-offset-2 col-md-8 text-center">
+    <label for="publicKey">Deployment key (add this to your GIT)</label>
+    <textarea rows="4" id="publicKey" readonly class="form-control" onclick="this.select()">{{publicKey}}</textarea>
+  </div>
+</div>
 
+<h3 class="text-center">2. Add new project</h3>
 <form ng-submit="create()" class="form-horizontal">
 
     <div class="form-group">
@@ -28,9 +35,10 @@
     </div>
 
     <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-7">
+        <div class="text-center">
             <button class="btn btn-success" type="submit">Add new project</button>
         </div>
     </div>
 
 </form>
+

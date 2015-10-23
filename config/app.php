@@ -137,7 +137,7 @@ return [
         App\Providers\ResponseMacroServiceProvider::class,
         App\Providers\NotifierServiceProvider::class,
         App\Providers\ValidatorServiceProvider::class,
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Maknz\Slack\SlackServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,

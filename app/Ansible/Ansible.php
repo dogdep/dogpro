@@ -78,9 +78,21 @@ class Ansible
             ->setTimeout(600)
             ->setEnv('ANSIBLE_FORCE_COLOR', true);
 
+        $processBuilder->setEnv("ANSIBLE_NOCOWS", 'True');
+        $processBuilder->setEnv("ANSIBLE_HOST_KEY_CHECKING", 'False');
+        $processBuilder->setEnv("ANSIBLE_DEPRECATION_WARNINGS", false);
+        $processBuilder->setEnv("ANSIBLE_ROLES_PATH", base_path("resources/ansible/roles"));
+        $processBuilder->setEnv("ANSIBLE_CALLBACK_PLUGINS", base_path("resources/ansible/callback_plugins"));
+        $processBuilder->setEnv("ANSIBLE_LOOKUP_PLUGINS", base_path("resources/ansible/lookup_plugins"));
+        $processBuilder->setEnv("ANSIBLE_LIBRARY", base_path("resources/ansible/modules"));
+        $processBuilder->setEnv("ANSIBLE_FILTER_PLUGINS", base_path("resources/ansible/filter_plugins"));
 
         if (!empty($this->options['pipelining'])) {
             $processBuilder->setEnv('ANSIBLE_SSH_PIPELINING', true);
+        }
+
+        if (!empty($this->options['private_key'])) {
+            $processBuilder->setEnv("ANSIBLE_PRIVATE_KEY_FILE", $this->options['private_key']);
         }
 
         return $processBuilder->getProcess();

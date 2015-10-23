@@ -16,7 +16,7 @@ class ValidatorService extends Validator
      */
     public function validateGitUrl($attribute, $value)
     {
-        return Admin::isValidRepository($value);
+        return Admin::isValidRepository($value, config('git.options'));
     }
 
     /**
