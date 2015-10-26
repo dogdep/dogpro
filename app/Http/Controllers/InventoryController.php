@@ -3,7 +3,6 @@
 use App\Http\Requests\Inventory\CreateInventory;
 use App\Http\Requests\Inventory\UpdateInventory;
 use App\Model\Inventory;
-use App\Model\Repo;
 use Illuminate\Http\Request;
 
 /**
@@ -12,12 +11,11 @@ use Illuminate\Http\Request;
 class InventoryController extends Controller
 {
     /**
-     * @param Repo $repo
      * @param Inventory $inv
      * @throws \Exception
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete(Repo $repo, Inventory $inv)
+    public function delete(Inventory $inv)
     {
         $inv->delete();
 
@@ -39,12 +37,11 @@ class InventoryController extends Controller
     }
 
     /**
-     * @param Repo $repo
      * @param Inventory $inv
      * @param UpdateInventory $request
      * @return Inventory
      */
-    public function update(Repo $repo, Inventory $inv, UpdateInventory $request)
+    public function update(Inventory $inv, UpdateInventory $request)
     {
         $inv->update([
             'repo_id' => $request->get('repo_id'),

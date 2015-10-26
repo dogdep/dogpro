@@ -32,7 +32,7 @@ Route::group(['prefix'=>'api', 'middleware' => 'jwt.auth'], function() {
         });
     });
 
-    Route::group(['prefix'=>'repo/{repo}/inventory'], function() {
+    Route::group(['prefix'=>'inventory'], function() {
         Route::get('/', 'InventoryController@index');
         Route::post('/', 'InventoryController@create');
         Route::post('/{inventory}', 'InventoryController@update');

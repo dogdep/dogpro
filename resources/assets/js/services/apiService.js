@@ -20,7 +20,7 @@
             config: $resource("/api/config"),
             roles: $resource("/api/roles"),
             users: $resource("/api/user"),
-            inventories: $resource("/api/repo/:repo_id/inventory/:id", {repo_id: '@repo_id', id: '@id'})
+            inventories: $resource("/api/inventory/:id", {id: '@id'})
         }
     }
 })();
