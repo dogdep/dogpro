@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use App\Exceptions\VaultException;
 use App\Http\Requests\Inventory\CreateInventory;
 use App\Http\Requests\Inventory\UpdateInventory;
 use App\Model\Inventory;
 use App\Model\Repo;
-use App\Services\VaultService;
 use Illuminate\Http\Request;
 
 /**
@@ -13,14 +11,6 @@ use Illuminate\Http\Request;
  */
 class InventoryController extends Controller
 {
-    /** @var VaultService  */
-    private $vault;
-
-    public function __construct(VaultService $vault)
-    {
-        $this->vault = $vault;
-    }
-
     /**
      * @param Repo $repo
      * @param Inventory $inv
@@ -36,26 +26,16 @@ class InventoryController extends Controller
 
     /**
      * @param CreateInventory $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return Inventory
      */
     public function create(CreateInventory $request)
     {
-        if ($request->get('download_keys')) {
-            try {
-                $this->vault->downloadHostKeys($request->get('inventory'));
-            } catch (VaultException $e) {
-                return response()->invalid($e->getMessage());
-            }
-        }
-
-        $inv = Inventory::create([
+        return Inventory::create([
             'repo_id' => $request->get('repo_id'),
             'inventory' => $request->get('inventory'),
             'name' => $request->get('name'),
             'params' => $request->get('params'),
         ]);
-
-        return $inv;
     }
 
     /**
@@ -66,14 +46,6 @@ class InventoryController extends Controller
      */
     public function update(Repo $repo, Inventory $inv, UpdateInventory $request)
     {
-        if ($request->get('download_keys')) {
-            try {
-                $this->vault->downloadHostKeys($request->get('inventory'));
-            } catch (VaultException $e) {
-                return response()->invalid($e->getMessage());
-            }
-        }
-
         $inv->update([
             'repo_id' => $request->get('repo_id'),
             'inventory' => $request->get('inventory'),
@@ -86,7 +58,7 @@ class InventoryController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @return Inventory[]
      */
     public function index(Request $request)
     {

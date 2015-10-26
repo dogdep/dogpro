@@ -4,12 +4,6 @@
         <label for="name" class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
             <input class="form-control" type="text" placeholder="inventory name..." id="name" ng-model="inventory.name" required>
-
-            <div class="checkbox">
-                <label>
-                    <input ng-model="inventory.download_keys" type="checkbox"/> Download key from vault
-                </label>
-            </div>
             <div class="checkbox">
                 <label>
                     <input ng-model="inventory.params.pipelining" type="checkbox"/>
@@ -37,25 +31,23 @@
     <li ng-repeat="(i, inv) in repo.inventories" class="list-group-item">
         <div class="col-buttons pull-right">
             <button class="btn btn-link" ng-click="remove(inv)"><i class="fa fa-times"></i></button>
-
             <button class="btn btn-link" ng-click="inventoryCollapse[i]=!inventoryCollapse[i]"><i class="fa fa-pencil"></i></button>
         </div>
         <div class="content">
             <div><strong><i class="fa fa-building fa-fw"></i> {{ inv.name }}</strong></div>
         </div>
+        <div class="content">
+            <label for="deploy_key_{{inv.id}}">Generated deployment key (add this to your authorized keys in each server)</label>
+            <textarea id="deploy_key_{{inv.id}}" class="form-control" readonly rows="4" onclick="this.select()">{{inv.public_key}}</textarea>
+        </div>
         <div collapse="!inventoryCollapse[i]" class="hr">
             <div class="content">
                 <div class="form-group">
-                    <label for="deploy_key_{{inv.id}}">Generated deployment key</label>
-                    <textarea id="deploy_key_{{inv.id}}" class="form-control" readonly rows="4" onclick="this.select()">{{inv.public_key}}</textarea>
+                    <label>Name</label>
+                    <input class="form-control" ng-model="inv.name" title="Name" />
                 </div>
                 <div class="form-group">
                     <textarea class="form-control" ng-model="inv.inventory" title="Inventory"></textarea>
-                    <div class="checkbox">
-                        <label>
-                            <input ng-model="inv.download_keys" type="checkbox"/> Download key from vault
-                        </label>
-                    </div>
                     <div class="checkbox">
                         <label>
                             <input ng-model="inv.params.pipelining" type="checkbox"/>

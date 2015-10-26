@@ -35,12 +35,6 @@ return [
         'secret' => '',
     ],
 
-    'vault' => [
-        'url' => env('VAULT_URL'),
-        'id' => env('VAULT_APP_ID'),
-        'secret' => env('VAULT_SECRET'),
-    ],
-
     'pusher' => [
         'key' => env('PUSHER_KEY'),
         'secret' => env('PUSHER_SECRET'),
