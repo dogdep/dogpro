@@ -1,5 +1,6 @@
 <?php namespace App\Http\Middleware;
 
+use App\Model\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -29,7 +30,9 @@ class AdminOnly
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->user() && $this->auth->user()->admin) {
+        $user = $this->auth->user();
+
+        if ($user instanceof User && $user->admin) {
             return $next($request);
         }
 

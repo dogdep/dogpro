@@ -81,7 +81,7 @@ class Repo extends Model
     public function isCloned()
     {
         try {
-            return null !== $this->git() && $this->git()->run('log');
+            return !is_null($this->git()) && !is_null($this->git()->run('log'));
         } catch (ProcessException $e) {
             return false;
         }

@@ -115,7 +115,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
     {
         $this->fs()->put($this->release->path("empty.yml"), "");
 
-        $playbook = new PlaybookConfig("all");
+        $playbook = new PlaybookConfig();
 
         $config = $this->release->config();
 

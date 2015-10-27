@@ -24,9 +24,9 @@ class DogproConfig implements JsonSerializable, Jsonable, Arrayable
     /**
      * @param string $content
      */
-    function __construct($content = null)
+    public function __construct($content = null)
     {
-        if ($content) {
+        if (!is_null($content)) {
             $this->data = Yaml::parse($content);
         }
     }

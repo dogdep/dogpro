@@ -2,7 +2,6 @@
 
 use App\Ansible\Ansible;
 use App\Model\Release;
-use Exception;
 
 /**
  * Class AnsibleException
@@ -14,7 +13,12 @@ class AnsibleException extends ReleaseException
      */
     private $ansible;
 
-    public function __construct(Release $release, Ansible $ansible, $message = "", Exception $previous = null)
+    /**
+     * @param Release $release
+     * @param Ansible $ansible
+     * @param string $message
+     */
+    public function __construct(Release $release, Ansible $ansible, $message = "")
     {
         $this->ansible = $ansible;
         $message = sprintf(
@@ -23,7 +27,7 @@ class AnsibleException extends ReleaseException
             $ansible->getInventoryFile(),
             $message
         );
-        parent::__construct($release, $message, $previous);
+        parent::__construct($release, $message);
     }
 
     /**

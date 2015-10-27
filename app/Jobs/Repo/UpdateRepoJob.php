@@ -3,6 +3,8 @@
 
 use App\Jobs\Job;
 use App\Jobs\Release\PrepareReleaseJob;
+use App\Model\Inventory;
+use App\Model\Release;
 use App\Model\Repo;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,6 +22,7 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
      * @var Repo
      */
     private $repo;
+
     /**
      * @var array
      */
@@ -41,16 +44,15 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
      */
     public function handle(Pusher $pusher)
     {
-        if ($this->repo->git()) {
-            $this->repo->git()->run('fetch', ['--all', '--prune']);
-
-            $this->checkCommitsForDeployTags();
-            $pusher->trigger('pulls', 'repo-'.$this->repo->id, []);
-
+        if (is_null($this->repo->git())) {
+            $this->dispatch(new CloneRepoJob($this->repo));
             return;
         }
 
-        $this->dispatch(new CloneRepoJob($this->repo));
+        $this->repo->git()->run('fetch', ['--all', '--prune']);
+
+        $this->checkCommitsForDeployTags();
+        $pusher->trigger('pulls', 'repo-'.$this->repo->id, []);
     }
 
     public function checkCommitsForDeployTags()
@@ -72,8 +74,14 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
             }
         }
 
-        if ($inv && $commit) {
-            $this->dispatch(new PrepareReleaseJob($this->repo, $commit, $inv, ['dogpro.deploy']));
+        if ($inv instanceof Inventory && !empty($commit['hash'])) {
+            $this->dispatch(new PrepareReleaseJob(Release::create([
+                'repo_id' => $this->repo->id,
+                'commit' => $commit['hash'],
+                'status' => Release::QUEUED,
+                'roles' => ['dogpro.deploy'],
+                'inventory_id' => $inv->id,
+            ])));
         }
     }
 }

@@ -1,7 +1,6 @@
 <?php namespace App\Exceptions;
 
 use App\Model\Release;
-use Exception;
 
 /**
  * Class ReleaseException
@@ -16,11 +15,10 @@ class ReleaseException extends Exception
     /**
      * @param Release $release
      * @param string $message
-     * @param Exception $previous
      */
-    public function __construct(Release $release, $message = "", Exception $previous = null)
+    public function __construct(Release $release, $message = "")
     {
-        parent::__construct($message, 0, $previous);
+        parent::__construct($message, 0);
         $this->release = $release;
     }
 

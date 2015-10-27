@@ -32,7 +32,7 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
     private $name = null;
 
     /**
-     * @var string
+     * @var boolean
      */
     private $sudo = false;
 
@@ -40,7 +40,7 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
      * @param string $name
      * @param array $hosts
      */
-    function __construct($name, $hosts = [])
+    public function __construct($name, $hosts = [])
     {
         $this->name = $name;
         $this->hosts = (array) $hosts;

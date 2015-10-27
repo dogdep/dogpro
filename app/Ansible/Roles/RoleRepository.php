@@ -19,7 +19,7 @@ class RoleRepository
     /**
      * @param string|null $path
      */
-    function __construct($path = null)
+    public function __construct($path = null)
     {
         if (is_null($path)) {
             $path = base_path("resources/ansible/roles");

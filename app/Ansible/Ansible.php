@@ -36,7 +36,7 @@ class Ansible
      * @param string $playbookFile
      * @param array $options
      */
-    function __construct($dir, $inventoryFile, $playbookFile, array $options = [])
+    public function __construct($dir, $inventoryFile, $playbookFile, array $options = [])
     {
         $this->dir = $dir;
         $this->inventoryFile = $inventoryFile;

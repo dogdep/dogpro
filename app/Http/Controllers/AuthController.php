@@ -31,7 +31,7 @@ class AuthController extends Controller
      */
     public function getStatus(JWTAuth $jwt)
     {
-        if ($token = $jwt->getToken()) {
+        if ($jwt->getToken() !== false) {
             return new JsonResponse(['user' => $jwt->toUser()]);
         }
 
@@ -44,7 +44,7 @@ class AuthController extends Controller
      */
     public function getIndex(JWTAuth $jwt)
     {
-        if ($token = $jwt->getToken()) {
+        if ($jwt->getToken() !== false) {
             $jwt->invalidate();
         }
 
