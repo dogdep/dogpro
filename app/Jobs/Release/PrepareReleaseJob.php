@@ -125,7 +125,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
 
         $playbook->setVars([
             "project_name" => $this->release->repo->name,
-            "global" => array_merge($config->defaults(), $config->globals(), (array)$this->release->repo->params),
+            "global" => array_merge($config->defaults(), $config->globals(), (array) $this->release->repo->params),
             "build_tar" => $this->release->path("build.tar.gz"),
             "build_path" => $this->release->path(),
             "build_version" => $this->release->commit,

@@ -65,7 +65,7 @@ class RoleRepository
         }
 
         foreach ($meta['variables'] as $variable => $config) {
-            $default = isset($defaults[$variable]) ? $defaults[$variable]: null;
+            $default = isset($defaults[$variable]) ? $defaults[$variable] : null;
             $meta['variables'][$variable] = [
                 'name' => array_get($config, 'name', $variable),
                 'desc' => array_get($config, 'desc'),

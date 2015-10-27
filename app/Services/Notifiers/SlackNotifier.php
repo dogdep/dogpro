@@ -62,7 +62,7 @@ class SlackNotifier implements ReleaseNotifierInterface
 
     /**
      * @param Release $release
-     * @param $title
+     * @param string $title
      * @param array $message
      */
     protected function sendNotification(Release $release, $title, array $message)
