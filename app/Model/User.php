@@ -12,6 +12,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property integer $id
  * @property boolean $admin
  * @property string $name
+ * @property string $nickname
+ * @property string $avatar
  * @property string $email
  * @property string $password
  * @property string $remember_token

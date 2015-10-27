@@ -35,7 +35,7 @@ class ReleaseController extends Controller
             'status' => Release::QUEUED,
             'roles' => $request->roles(),
             'inventory_id' => $request->get('inventory_id'),
-            'user_id' => auth()->user()->id,
+            'user_id' => $this->user()->id,
         ]);
 
         $this->dispatch(new PrepareReleaseJob($release));

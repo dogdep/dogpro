@@ -19,12 +19,10 @@ class RepoController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-
-        if ($user->admin) {
+        if ($this->user()->admin) {
             return Repo::all();
         } else {
-            return $user->repos;
+            return $this->user()->repos;
         }
     }
 
@@ -50,7 +48,7 @@ class RepoController extends Controller
             'group' => $request->get('group'),
         ]);
 
-        $repo->users()->save(auth()->user());
+        $repo->users()->save($this->user());
 
         $this->dispatch(new CloneRepoJob($repo));
 
@@ -66,11 +64,11 @@ class RepoController extends Controller
 
     /**
      * @param Repo $repo
-     * @return Repo
+     * @return Repo|\Illuminate\Http\JsonResponse
      */
     public function delete(Repo $repo)
     {
-        if (!auth()->user()->admin) {
+        if (!$this->user()->admin) {
             return response()->json(["error"=>"Only admin can delete repository"], 422);
         }
         $this->dispatch(new DeleteRepoJob($repo));
@@ -136,7 +134,7 @@ class RepoController extends Controller
 
     public function deleteUser(Repo $repo, User $user)
     {
-        $repo->users()->detach($user);
+        $repo->users()->detach($user->id);
         return $repo;
     }
 }

@@ -4,6 +4,7 @@ use App\Model\Repo;
 use App\Model\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 
 /**
  * Class RepoAccess
@@ -23,17 +24,17 @@ class RepoAccess
         $this->auth = $auth;
     }
 
-
-    public function handle(\Illuminate\Http\Request $request, Closure $next)
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
     {
         $repo = $request->route()->getParameter('repo');
         $user = $this->auth->user();
 
-        if (!$user instanceof User) {
-            abort(403);
-        }
-
-        if ($repo instanceof Repo && !$repo->canAccess($user)) {
+        if (!$user instanceof User || ($repo instanceof Repo && !$repo->canAccess($user))) {
             abort(403);
         }
 

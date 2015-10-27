@@ -40,9 +40,7 @@ class Release extends Model
 {
     const PLAYBOOK_FILENAME = "_dogpro_run.yml";
     const INVENTORY_FILENAME = "_dogpro_inventory";
-    const REVISION_FILENAME = "_dogpro_revision";
-    const LOG_RAW_FILENAME = "_dogpro_raw.log";
-    const LOG_FILENAME = "_dogpro_play.log";
+
     const QUEUED = 'queued';
     const PREPARING = 'preparing';
     const ERROR = 'error';
@@ -83,6 +81,9 @@ class Release extends Model
             ->avg('time');
     }
 
+    /**
+     * @return bool
+     */
     public function isCancelled()
     {
         $this->status = $this->query()->where('id', $this->id)->value('status');
@@ -121,35 +122,28 @@ class Release extends Model
         return $this->config;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function inventory()
     {
         return $this->belongsTo(Inventory::class);
     }
 
+    /**
+     * @return bool
+     */
     public function isCancellable()
     {
         return in_array($this->status, [self::QUEUED, self::RUNNING, self::PREPARING]);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function repo()
     {
         return $this->belongsTo(Repo::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function playbookFilename()
-    {
-        return self::PLAYBOOK_FILENAME;
-    }
-
-    /**
-     * @return string
-     */
-    public function inventoryFilename()
-    {
-        return self::INVENTORY_FILENAME;
     }
 
     /**
@@ -170,40 +164,29 @@ class Release extends Model
     }
 
     /**
-     * @param PlaybookConfig $playbook
-     * @param Inventory $inventory
-     * @param Commit $commit
-     * @throws ReleaseException
+     * @param string $value
+     * @return array
      */
-    public function write(PlaybookConfig $playbook, Inventory $inventory, Commit $commit)
+    public function getRolesAttribute($value)
     {
-        if (!@file_put_contents($this->path(self::PLAYBOOK_FILENAME), $playbook->render())) {
-            throw new ReleaseException($this, "Cannot write playbook file!");
-        }
-
-        if (!@file_put_contents($this->path(self::INVENTORY_FILENAME), $inventory->render())) {
-            throw new ReleaseException($this, "Cannot write inventory file!");
-        }
-
-        if (!@file_put_contents($this->path(self::REVISION_FILENAME), $commit->getHash())) {
-            throw new ReleaseException($this, "Cannot revision file!");
-        }
-    }
-
-    public function getRolesAttribute()
-    {
-        if (empty($this->attributes['roles'])) {
+        if (empty($value)) {
             return [];
         }
 
-        return json_decode($this->attributes['roles'], true);
+        return json_decode($value, true);
     }
 
+    /**
+     * @param array $value
+     */
     public function setRolesAttribute(array $value)
     {
         $this->attributes['roles'] = json_encode(array_values($value));
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return parent::toArray() + [
@@ -211,8 +194,12 @@ class Release extends Model
         ];
     }
 
-    public function getStartedAtAttribute()
+    /**
+     * @param string $value
+     * @return int|null
+     */
+    public function getStartedAtAttribute($value)
     {
-        return empty($this->attributes['started_at']) ? null : strtotime($this->attributes['started_at']);
+        return empty($value) ? null : strtotime($value);
     }
 }

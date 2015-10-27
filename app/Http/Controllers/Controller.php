@@ -9,4 +9,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @return \Illuminate\Contracts\Auth\Authenticatable|\App\Model\User
+     */
+    public function user()
+    {
+        return auth()->user();
+    }
 }

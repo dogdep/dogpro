@@ -34,6 +34,10 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
         $this->release = $release;
     }
 
+    /**
+     * @param Pusher $pusher
+     * @throws \Exception
+     */
     public function handle(Pusher $pusher)
     {
         try {
@@ -102,7 +106,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
 
     /**
      * @throws \App\Exceptions\InvalidConfigException
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws ReleaseException
      */
     private function writePlaybooks()
     {
@@ -129,6 +133,14 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             "inventory_name" => $this->release->inventory->name,
         ]);
 
-        $this->release->write($playbook, $this->release->inventory, $this->release->commit());
+        $playbookFile = $this->release->path(Release::PLAYBOOK_FILENAME);
+        if (!$this->fs()->put($playbookFile, $playbook->render())) {
+            throw new ReleaseException($this->release, "Cannot write playbook file: $playbookFile!");
+        }
+
+        $inventoryFile = $this->release->path(Release::INVENTORY_FILENAME);
+        if (!$this->fs()->put($inventoryFile, $this->release->inventory->render())) {
+            throw new ReleaseException($this->release, "Cannot write inventory file: $inventoryFile!");
+        }
     }
 }

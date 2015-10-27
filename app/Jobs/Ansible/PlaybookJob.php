@@ -39,8 +39,8 @@ class PlaybookJob implements ShouldQueue, SelfHandling
             $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime()]);
             $ansible = new Ansible(
                 $this->release->path(),
-                $this->release->inventoryFilename(),
-                $this->release->playbookFilename(),
+                Release::INVENTORY_FILENAME,
+                Release::PLAYBOOK_FILENAME,
                 $this->release->inventory->params + [
                     'private_key' => $key,
                 ]

@@ -68,7 +68,7 @@ class AuthController extends Controller
 
     /**
      * @param string $provider
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function getLogin($provider)
     {
@@ -104,18 +104,20 @@ class AuthController extends Controller
      */
     private function createOrFindUser($login)
     {
-        if ($login->getEmail() && $user = User::whereEmail($login->getEmail())->first()) {
+        $user = User::firstOrNew(['email'=>$login->getEmail()]);
+
+        if ($user->exists) {
             return $user;
         }
 
-        return User::create([
-            'email' => $login->getEmail(),
-            'name' => $login->getName() ?: $login->getNickname(),
-            'nickname' => $login->getNickname(),
-            'password' => Hash::make($login->getId() . time()),
-            'avatar' => $login->getAvatar(),
-            'admin' => User::count() == 0,
-        ]);
+        $user->name = $login->getName() ?: $login->getNickname();
+        $user->nickname = $login->getNickname();
+        $user->password = Hash::make($login->getId() . time());
+        $user->avatar = $login->getAvatar();
+        $user->admin = User::count() == 0;
+        $user->save();
+
+        return $user;
     }
 
     /**
