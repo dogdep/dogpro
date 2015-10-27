@@ -3,6 +3,7 @@
 use App\Http\Requests\Inventory\CreateInventory;
 use App\Http\Requests\Inventory\UpdateInventory;
 use App\Model\Inventory;
+use App\Model\Release;
 use Illuminate\Http\Request;
 
 /**
@@ -28,12 +29,7 @@ class InventoryController extends Controller
      */
     public function create(CreateInventory $request)
     {
-        return Inventory::create([
-            'repo_id' => $request->get('repo_id'),
-            'inventory' => $request->get('inventory'),
-            'name' => $request->get('name'),
-            'params' => $request->get('params'),
-        ]);
+        return Inventory::create($request->data());
     }
 
     /**
@@ -43,12 +39,7 @@ class InventoryController extends Controller
      */
     public function update(Inventory $inv, UpdateInventory $request)
     {
-        $inv->update([
-            'repo_id' => $request->get('repo_id'),
-            'inventory' => $request->get('inventory'),
-            'name' => $request->get('name'),
-            'params' => $request->get('params'),
-        ]);
+        $inv->update($request->data());
 
         return $inv;
     }

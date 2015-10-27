@@ -20,4 +20,13 @@ class UpdateInventory extends FormRequest
             'params' => 'array',
         ];
     }
+
+    public function data()
+    {
+        return [
+            'inventory' => $this->get('inventory'),
+            'name' => $this->get('name'),
+            'params' => $this->get('params'),
+        ];
+    }
 }
