@@ -52,7 +52,7 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
         $this->repo->git()->run('fetch', ['--all', '--prune']);
 
         $this->checkCommitsForDeployTags();
-        $pusher->trigger('pulls', 'repo-'.$this->repo->id, []);
+        $pusher->trigger(['pulls'], 'repo-'.$this->repo->id, []);
     }
 
     public function checkCommitsForDeployTags()

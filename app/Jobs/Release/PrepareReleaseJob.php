@@ -42,7 +42,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             }
 
             $this->release->update(['status' => Release::PREPARING]);
-            $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+            $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
 
             $this->prepareReleaseDir();
             $this->createArchive();
@@ -57,7 +57,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             $this->dispatch(new CleanupReleasesJob($this->release->repo));
         } catch (\Exception $e) {
             $this->release->update(['status' => Release::ERROR, 'raw_logs'=>$e->getMessage()]);
-            $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+            $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
             $this->release->logger()->error($e->getMessage());
             throw $e;
         }

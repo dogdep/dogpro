@@ -23,4 +23,21 @@ trait ManageFilesystem
 
         return $this->fs;
     }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    public function removeDir($path)
+    {
+        if ($this->fs()->isDirectory($path)) {
+            return $this->fs()->deleteDirectory($path);
+        }
+
+        if ($this->fs()->isFile($path)) {
+            return $this->fs()->delete($path);
+        }
+
+        return true;
+    }
 }

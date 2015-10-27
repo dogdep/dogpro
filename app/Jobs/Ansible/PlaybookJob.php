@@ -53,7 +53,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
 
                 if ($lastOut != $out) {
                     $this->updateRelease($process);
-                    $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+                    $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
                     $lastOut = $out;
                 }
 
@@ -69,11 +69,11 @@ class PlaybookJob implements ShouldQueue, SelfHandling
             $this->updateRelease($process);
 
             if ($this->release->status == Release::CANCELLED) {
-                $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+                $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
             } elseif ($process->getExitCode() == 0) {
                 $this->notifier()->notifySuccess($this->release);
                 $this->release->update(['status' => Release::COMPLETED, 'time'=>time()-$timeStarted]);
-                $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+                $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
             } else {
                 $this->notifier()->notifyFailure($this->release, $process->getErrorOutput());
                 throw new AnsibleException($this->release, $ansible, $process->getErrorOutput());
@@ -81,7 +81,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
         } catch (\Exception $e) {
             $this->release->logger()->error("Ansible run failed");
             $this->release->update(['status' => Release::ERROR, 'time'=>time()-$timeStarted]);
-            $pusher->trigger('releases', "release-" . $this->release->id, $this->release->toArray());
+            $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
 
             @unlink($key);
             throw $e;

@@ -130,7 +130,7 @@ class Repo extends Model
         return parent::toArray() + [
             'inventories' => $this->inventories,
             'users' => $this->users,
-            'hookUrl'=> config('app.url') . action('HookController@pull', $this->id, false)
+            'hookUrl'=> config('app.url') . action('HookController@pull', [$this->id], false)
         ];
     }
 

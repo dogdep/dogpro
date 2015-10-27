@@ -32,14 +32,12 @@ class DeleteRepoJob implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
-        $path = $this->repo->repoPath();
-        if ($this->fs()->isDirectory($path) && !$this->fs()->deleteDirectory($path)) {
-            throw new \RuntimeException(sprintf("Failed to delete %s", $path));
+        if (!$this->removeDir($this->repo->repoPath())) {
+            throw new \RuntimeException(sprintf("Failed to delete %s", $this->repo->repoPath()));
         }
 
-        $path = $this->repo->releasePath();
-        if ($this->fs()->isDirectory($path) && !$this->fs()->deleteDirectory($path)) {
-            throw new \RuntimeException(sprintf("Failed to delete %s", $path));
+        if (!$this->removeDir($this->repo->releasePath())) {
+            throw new \RuntimeException(sprintf("Failed to delete %s", $this->repo->releasePath()));
         }
 
         $this->repo->delete();
