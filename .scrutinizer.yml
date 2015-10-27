@@ -1,10 +1,11 @@
 filter:
     paths:
         - 'app/*'
+    excluded_paths:
+        - 'app/views/*'
+        - 'app/config/*'
+        - 'app/database/*'
 checks:
     php: true
-    code_rating: true
-    duplication: true
-
 coding_style:
     php: {  }
