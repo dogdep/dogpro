@@ -29,7 +29,7 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
      * @param Repo $repo
      * @param array $commitList
      */
-    function __construct(Repo $repo, $commitList = [])
+    public function __construct(Repo $repo, $commitList = [])
     {
         $this->repo = $repo;
         $this->commitList = $commitList;

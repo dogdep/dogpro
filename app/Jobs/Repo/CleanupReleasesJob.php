@@ -21,7 +21,7 @@ class CleanupReleasesJob implements SelfHandling, ShouldQueue
     /**
      * @param Repo $repo
      */
-    function __construct(Repo $repo)
+    public function __construct(Repo $repo)
     {
         $this->repo = $repo;
     }

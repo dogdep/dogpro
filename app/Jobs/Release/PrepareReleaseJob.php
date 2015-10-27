@@ -29,7 +29,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
     /**
      * @param Release $release
      */
-    function __construct(Release $release)
+    public function __construct(Release $release)
     {
         $this->release = $release->init();
     }

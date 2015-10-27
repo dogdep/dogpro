@@ -16,7 +16,7 @@ class SlackNotifier implements ReleaseNotifierInterface
     /**
      * @param Client $slack
      */
-    function __construct(Client $slack = null)
+    public function __construct(Client $slack = null)
     {
         $this->slack = $slack ?: app('maknz.slack');
     }

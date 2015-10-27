@@ -2,11 +2,12 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use JsonSerializable;
 
 /**
  * Class PlayConfig
  */
-class PlayConfig implements Jsonable, \JsonSerializable, Arrayable
+class PlayConfig implements Jsonable, JsonSerializable, Arrayable
 {
     use \App\Traits\Jsonable;
 

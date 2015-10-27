@@ -7,6 +7,9 @@ use \Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
 
+/**
+ * Class AuthController
+ */
 class AuthController extends Controller
 {
     public function __construct()
@@ -14,33 +17,48 @@ class AuthController extends Controller
         $this->middleware('jwt.auth', ['only' => ['getIndex']]);
     }
 
+    /**
+     * @return array
+     */
     public function getProviders()
     {
         return config('auth.providers');
     }
 
+    /**
+     * @param JWTAuth $jwt
+     * @return \Illuminate\Http\Response
+     */
     public function getStatus(JWTAuth $jwt)
     {
         if ($token = $jwt->getToken()) {
-            return new JsonResponse(['user' => $jwt->toUser($token)]);
+            return new JsonResponse(['user' => $jwt->toUser()]);
         }
 
         return new JsonResponse(null, 405);
     }
 
+    /**
+     * @param JWTAuth $jwt
+     * @return \Illuminate\Http\Response
+     */
     public function getIndex(JWTAuth $jwt)
     {
         if ($token = $jwt->getToken()) {
-            $jwt->invalidate($token);
+            $jwt->invalidate();
         }
 
         return new JsonResponse();
     }
 
+    /**
+     * @param JWTAuth $jwt
+     * @return \Illuminate\Http\Response
+     */
     public function getRefresh(JWTAuth $jwt)
     {
         try {
-            $token = $jwt->refresh($jwt->getToken());
+            $token = $jwt->refresh();
         } catch (JWTException $e) {
             return new JsonResponse(null, 401);
         }
@@ -48,6 +66,10 @@ class AuthController extends Controller
         return new JsonResponse(['token' => $token]);
     }
 
+    /**
+     * @param string $provider
+     * @return \Illuminate\Http\Response
+     */
     public function getLogin($provider)
     {
         if (!in_array($provider, $this->getProviders())) {
@@ -57,6 +79,11 @@ class AuthController extends Controller
         return \Socialite::driver($provider)->redirect();
     }
 
+    /**
+     * @param string $provider
+     * @param JWTAuth $jwt
+     * @return \Illuminate\Http\Response
+     */
     public function getCallback($provider, JWTAuth $jwt)
     {
         if (!in_array($provider, $this->getProviders())) {
@@ -67,13 +94,13 @@ class AuthController extends Controller
             $user = \Socialite::driver($provider)->user();
             return $this->handleSocialLogin($jwt, $user, $provider);
         } catch (\Exception $e) {
-            return redirect('/login?' . http_build_query(['error'=>$e->getMessage()]));
+            return redirect('/login?' . http_build_query(['error' => $e->getMessage()]));
         }
     }
 
     /**
      * @param \Laravel\Socialite\Contracts\User $login
-     * @return static
+     * @return User
      */
     private function createOrFindUser($login)
     {
@@ -83,7 +110,7 @@ class AuthController extends Controller
 
         return User::create([
             'email' => $login->getEmail(),
-            'name' => $login->getName() ? : $login->getNickname(),
+            'name' => $login->getName() ?: $login->getNickname(),
             'nickname' => $login->getNickname(),
             'password' => Hash::make($login->getId() . time()),
             'avatar' => $login->getAvatar(),
@@ -94,7 +121,8 @@ class AuthController extends Controller
     /**
      * @param JWTAuth $jwt
      * @param \Laravel\Socialite\Contracts\User $login
-     * @return JsonResponse
+     * @param string $provider
+     * @return \Illuminate\Http\Response
      */
     private function handleSocialLogin(JWTAuth $jwt, $login, $provider)
     {
@@ -114,10 +142,11 @@ class AuthController extends Controller
         $token->save();
 
         try {
-            if ($token = $jwt->fromUser($user, ['user' => $user])) {
+            if ($token = $jwt->fromUser($user)) {
                 return redirect("/login/handle/$token");
             }
         } catch (JWTException $e) {
+            // return error on exception or empty token
         }
 
         return new JsonResponse(['Error creating JWT token'], 401);

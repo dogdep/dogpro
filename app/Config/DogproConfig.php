@@ -4,12 +4,13 @@ use App\Ansible\Config\PlayConfig;
 use App\Exceptions\InvalidConfigException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use JsonSerializable;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class DogproConfig
  */
-class DogproConfig implements \JsonSerializable, Jsonable, Arrayable
+class DogproConfig implements JsonSerializable, Jsonable, Arrayable
 {
     use \App\Traits\Jsonable;
 

@@ -18,14 +18,14 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|Repo[] $repos
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereEmail($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User wherePassword($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereAdmin($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereRememberToken($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereAdmin($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|User whereUpdatedAt($value)
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, JWTSubject
 {

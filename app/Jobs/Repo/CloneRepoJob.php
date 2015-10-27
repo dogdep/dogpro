@@ -25,7 +25,7 @@ class CloneRepoJob extends Job implements ShouldQueue, SelfHandling
     /**
      * @param Repo $repo
      */
-    function __construct(Repo $repo)
+    public function __construct(Repo $repo)
     {
         $this->repo = $repo;
         $this->fs = new Filesystem();
