@@ -1,0 +1,10 @@
+filter:
+    paths:
+        - 'app/*'
+checks:
+    php: true
+    code_rating: true
+    duplication: true
+
+coding_style:
+    php: {  }
