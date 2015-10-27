@@ -5,9 +5,6 @@ use App\Config\DogproConfig;
 use App\Exceptions\ReleaseException;
 use App\Git\CommitPager;
 use Gitonomy\Git\Commit;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 
 /**
  * Class Release
@@ -26,24 +23,21 @@ use Monolog\Logger;
  * @property \Carbon\Carbon $started_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read Inventory $inventory
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereCommit($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereStatus($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereRoles($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereRawLog($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereInventoryId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereRepoId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereTime($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereStartedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Model\Release whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereCommit($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereStatus($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereRoles($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereRawLog($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereInventoryId($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereRepoId($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereTime($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereStartedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Release whereUpdatedAt($value)
  */
 class Release extends Model
 {
-    const LOG_FORMAT = "[%datetime%]: %message% %context% %extra%\n";
-
     const PLAYBOOK_FILENAME = "_dogpro_run.yml";
     const INVENTORY_FILENAME = "_dogpro_inventory";
     const REVISION_FILENAME = "_dogpro_revision";
@@ -77,13 +71,11 @@ class Release extends Model
     ];
 
     /**
-     * @var Logger
+     * @return float
      */
-    private static $log = [];
-
     public function avg()
     {
-        return \DB::table('releases')
+        return (float) $this->query()
             ->where('repo_id', $this->repo_id)
             ->where('roles', $this->attributes['roles'])
             ->where('status', Release::COMPLETED)
@@ -91,11 +83,19 @@ class Release extends Model
             ->avg('time');
     }
 
+    public function isCancelled()
+    {
+        $this->status = $this->query()->where('id', $this->id)->value('status');
+        return $this->status == self::CANCELLED;
+    }
+
+    /**
+     * @return array
+     */
     public function getDates()
     {
         return array_merge(parent::getDates(), ['started_at']);
     }
-
 
     /**
      * @return Commit
@@ -153,54 +153,6 @@ class Release extends Model
     }
 
     /**
-     * Initialize (ignore any error)
-     * @return Release
-     */
-    public function init()
-    {
-        $path = $this->path();
-        @mkdir($path, 0777, true);
-        @unlink($this->path(self::LOG_RAW_FILENAME));
-        @unlink($this->path(self::LOG_FILENAME));
-
-        return $this;
-    }
-
-    public function getAnsibleRawLog()
-    {
-        $path = $this->path(self::LOG_FILENAME);
-        if (is_file($path) && is_readable($path)) {
-            return file_get_contents($path);
-        }
-
-        return null;
-    }
-
-    public function message($type, $message)
-    {
-        @file_put_contents($this->path(self::LOG_FILENAME), json_encode([
-            'event' => 'message',
-            'type' => $type,
-            'msg' => $message,
-        ]), FILE_APPEND);
-    }
-
-    /**
-     * @return Logger
-     */
-    public function logger()
-    {
-        if (!isset(self::$log[$this->name()])) {
-            $handler = new StreamHandler($this->path(self::LOG_RAW_FILENAME));
-            $handler->setFormatter(new LineFormatter(self::LOG_FORMAT, null, false, true));
-
-            self::$log[$this->name()] = new Logger("releaseLog", [$handler]);
-        }
-
-        return self::$log[$this->name()];
-    }
-
-    /**
      * @param string|null $path
      * @return string
      */
@@ -208,13 +160,6 @@ class Release extends Model
     {
         return $this->repo->releasePath("{$this->id}_{$this->commit}") . ($path ? "/$path" : null);
     }
-
-    public function resetLogs()
-    {
-        @file_put_contents($this->path(self::LOG_FILENAME), "");
-        @file_put_contents($this->path(self::LOG_RAW_FILENAME), "");
-    }
-
 
     /**
      * @return string
@@ -243,14 +188,6 @@ class Release extends Model
         if (!@file_put_contents($this->path(self::REVISION_FILENAME), $commit->getHash())) {
             throw new ReleaseException($this, "Cannot revision file!");
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function name()
-    {
-        return sprintf("%s_%s", $this->repo->name, $this->commit);
     }
 
     public function getRolesAttribute()

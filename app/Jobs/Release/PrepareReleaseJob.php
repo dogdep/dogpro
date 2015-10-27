@@ -31,13 +31,13 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
      */
     public function __construct(Release $release)
     {
-        $this->release = $release->init();
+        $this->release = $release;
     }
 
     public function handle(Pusher $pusher)
     {
         try {
-            if ($this->wasCancelled()) {
+            if ($this->release->isCancelled()) {
                 return;
             }
 
@@ -49,7 +49,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             $this->extractArchive();
             $this->writePlaybooks();
 
-            if ($this->wasCancelled()) {
+            if ($this->release->isCancelled()) {
                 return;
             }
 
@@ -58,7 +58,6 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
         } catch (\Exception $e) {
             $this->release->update(['status' => Release::ERROR, 'raw_logs'=>$e->getMessage()]);
             $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
-            $this->release->logger()->error($e->getMessage());
             throw $e;
         }
     }
@@ -100,12 +99,6 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
 
         return $releaseDir;
     }
-
-    private function wasCancelled()
-    {
-        return \DB::table('releases')->where('id', $this->release->id)->value('status') == Release::CANCELLED;
-    }
-
 
     /**
      * @throws \App\Exceptions\InvalidConfigException

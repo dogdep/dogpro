@@ -4,6 +4,7 @@ use App\Ansible\Ansible;
 use App\Exceptions\AnsibleException;
 use App\Model\Release;
 use App\Services\NotifierService;
+use App\Traits\ManageFilesystem;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Pusher;
@@ -14,6 +15,8 @@ use Symfony\Component\Process\Process;
  */
 class PlaybookJob implements ShouldQueue, SelfHandling
 {
+    use ManageFilesystem;
+
     /**
      * @var Release
      */
@@ -33,7 +36,6 @@ class PlaybookJob implements ShouldQueue, SelfHandling
         $key = $this->writePrivateKey();
 
         try {
-            $this->release->resetLogs();
             $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime()]);
             $ansible = new Ansible(
                 $this->release->path(),
@@ -48,7 +50,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
             $process->start();
 
             $lastOut = $process->getOutput();
-            while ($process->isRunning() && !$this->wasCancelled()) {
+            while ($process->isRunning() && !$this->release->isCancelled()) {
                 $out = $process->getOutput();
 
                 if ($lastOut != $out) {
@@ -64,7 +66,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $process->stop(0);
             }
 
-            @unlink($key);
+            $this->fs()->delete($key);
 
             $this->updateRelease($process);
 
@@ -79,11 +81,10 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 throw new AnsibleException($this->release, $ansible, $process->getErrorOutput());
             }
         } catch (\Exception $e) {
-            $this->release->logger()->error("Ansible run failed");
             $this->release->update(['status' => Release::ERROR, 'time'=>time()-$timeStarted]);
             $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
 
-            @unlink($key);
+            $this->fs()->delete($key);
             throw $e;
         }
     }
@@ -94,14 +95,10 @@ class PlaybookJob implements ShouldQueue, SelfHandling
     protected function writePrivateKey()
     {
         $file = tempnam(sys_get_temp_dir(), "key");
-        @file_put_contents($file, $this->release->inventory->private_key);
+        if ($this->fs()->put($file, $this->release->inventory->private_key) === false) {
+            throw new \RuntimeException("Failed to write private key");
+        }
         return $file;
-    }
-
-    private function wasCancelled()
-    {
-        $this->release->status = \DB::table('releases')->where('id', $this->release->id)->value('status');
-        return $this->release->status == Release::CANCELLED;
     }
 
     /**
