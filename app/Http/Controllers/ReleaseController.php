@@ -19,7 +19,7 @@ class ReleaseController extends Controller
     /**
      * @param CreateRelease $request
      * @param Repo $repo
-     * @return Repo
+     * @return Release
      */
     public function create(CreateRelease $request, Repo $repo)
     {
@@ -45,7 +45,7 @@ class ReleaseController extends Controller
 
     public function update(Repo $repo, Release $release, Request $request)
     {
-        switch($request->get('status')) {
+        switch ($request->get('status')) {
             case Release::QUEUED:
                 if (!$release->status == Release::ERROR) {
                     return response()->json(['error'=>'Cannot retry!'], 422);

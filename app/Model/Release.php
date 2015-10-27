@@ -1,8 +1,6 @@
 <?php namespace App\Model;
 
-use App\Ansible\Config\PlaybookConfig;
 use App\Config\DogproConfig;
-use App\Exceptions\ReleaseException;
 use App\Git\CommitPager;
 use Gitonomy\Git\Commit;
 
@@ -196,7 +194,7 @@ class Release extends Model
 
     /**
      * @param string $value
-     * @return int|null
+     * @return integer
      */
     public function getStartedAtAttribute($value)
     {

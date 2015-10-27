@@ -27,7 +27,7 @@ class AuthController extends Controller
 
     /**
      * @param JWTAuth $jwt
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function getStatus(JWTAuth $jwt)
     {
@@ -40,7 +40,7 @@ class AuthController extends Controller
 
     /**
      * @param JWTAuth $jwt
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function getIndex(JWTAuth $jwt)
     {
@@ -53,7 +53,7 @@ class AuthController extends Controller
 
     /**
      * @param JWTAuth $jwt
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function getRefresh(JWTAuth $jwt)
     {

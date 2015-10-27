@@ -52,7 +52,7 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
         $this->repo->git()->run('fetch', ['--all', '--prune']);
 
         $this->checkCommitsForDeployTags();
-        $pusher->trigger(['pulls'], 'repo-'.$this->repo->id, []);
+        $pusher->trigger(['pulls'], 'repo-' . $this->repo->id, []);
     }
 
     public function checkCommitsForDeployTags()
@@ -64,8 +64,8 @@ class UpdateRepoJob extends Job implements ShouldQueue, SelfHandling
             $parts = explode(" ", $commit['message']);
 
             if (($index = array_search('@deploy', $parts)) !== false) {
-                if (isset($parts[$index+1])) {
-                    $inv = $this->repo->inventories()->where('name', trim($parts[$index+1]))->get()->first();
+                if (isset($parts[$index + 1])) {
+                    $inv = $this->repo->inventories()->where('name', trim($parts[$index + 1]))->get()->first();
 
                     if ($inv) {
                         break;

@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Pusher', function () {
+        $this->app->bind('Pusher', function() {
             return new \Pusher(
                 config('services.pusher.key'),
                 config('services.pusher.secret'),
