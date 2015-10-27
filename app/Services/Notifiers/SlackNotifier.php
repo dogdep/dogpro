@@ -27,40 +27,14 @@ class SlackNotifier implements ReleaseNotifierInterface
      */
     public function notifyFailure(Release $release, $error)
     {
-        $channel = $this->channel($release);
-
-        if (!$channel || !$release->repo->param('notify_failure')) {
+        if (!$this->channel($release) || !$release->repo->param('notify_failure')) {
             return;
         }
 
-        $commit = $release->commit();
-        $this->slack->createMessage()->to($channel)->attach([
-            'fallback' => 'Release failed',
+        $this->sendNotification($release, 'Release failed', [
             'text' => $error,
             'color' => 'danger',
-            'fields' => [
-                [
-                    'title' => 'Commit',
-                    'value' => $commit->getShortHash(),
-                    'short' => true,
-
-                ],
-                [
-                    'title' => 'Message',
-                    'value' => $commit->getShortMessage(),
-                    'short' => true
-                ],
-                [
-                    'title' => 'Author',
-                    'value' => $commit->getAuthorName() . '(' . $commit->getAuthorEmail() . ')',
-                ],
-                [
-                    'title' => 'Details',
-                    'value' => $release->url(),
-                ],
-
-            ]
-        ])->send("Release failed");
+        ]);
     }
 
     /**
@@ -68,43 +42,56 @@ class SlackNotifier implements ReleaseNotifierInterface
      */
     public function notifySuccess(Release $release)
     {
-        $channel = $this->channel($release);
-
-        if (!$channel || !$release->repo->param('notify_success')) {
+        if (!$this->channel($release) || !$release->repo->param('notify_success')) {
             return;
         }
 
-        $commit = $release->commit();
-        $this->slack->createMessage()->to($channel)->attach([
-            'fallback' => 'Release successful',
+        $this->sendNotification($release, 'Release successful', [
             'color' => 'good',
-            'fields' => [
-                [
-                    'title' => 'Commit',
-                    'value' => $commit->getShortHash(),
-                    'short' => true,
-
-                ],
-                [
-                    'title' => 'Message',
-                    'value' => $commit->getShortMessage(),
-                    'short' => true
-                ],
-                [
-                    'title' => 'Author',
-                    'value' => $commit->getAuthorName() . '(' . $commit->getAuthorEmail() . ')',
-                ],
-                [
-                    'title' => 'Details',
-                    'value' => $release->url(),
-                ],
-
-            ]
-        ])->send("Release successful");
+        ]);
     }
 
+    /**
+     * @param Release $release
+     * @return null|false
+     */
     public function channel(Release $release)
     {
-        return $release->repo->param('slack_channel');
+        return $release->repo->param('slack_channel', false);
+    }
+
+    /**
+     * @param Release $release
+     * @param $title
+     * @param array $message
+     */
+    protected function sendNotification(Release $release, $title, array $message)
+    {
+        $commit = $release->commit();
+        $this->slack->createMessage()->to($this->channel($release))->attach($message + [
+                'fallback' => $title,
+                'fields' => [
+                    [
+                        'title' => 'Commit',
+                        'value' => $commit->getShortHash(),
+                        'short' => true,
+                    ],
+                    [
+                        'title' => 'Message',
+                        'value' => $commit->getShortMessage(),
+                        'short' => true
+                    ],
+                    [
+                        'title' => 'Author',
+                        'value' => $commit->getAuthorName() . '(' . $commit->getAuthorEmail() . ')',
+                    ],
+                    [
+                        'title' => 'Details',
+                        'value' => $release->url(),
+                    ],
+
+                ]
+            ]
+        )->send($message);
     }
 }

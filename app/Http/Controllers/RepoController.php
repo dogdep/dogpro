@@ -48,7 +48,9 @@ class RepoController extends Controller
             'group' => $request->get('group'),
         ]);
 
-        $repo->users()->save($this->user());
+        if (!is_null($this->user())) {
+            $repo->users()->save($this->user());
+        }
 
         $this->dispatch(new CloneRepoJob($repo));
 
