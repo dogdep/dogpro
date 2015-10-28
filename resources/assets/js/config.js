@@ -147,7 +147,7 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
             templateUrl: "/templates/repo/release.html",
             resolve: {
                 release: function ($stateParams, api) {
-                    return api.releases.get({repo_id: $stateParams.id, id: $stateParams.release_id}).$promise;
+                    return api.releases.get({id: $stateParams.release_id}).$promise;
                 }
             }
         })
@@ -193,7 +193,7 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
             },
             resolve: {
                 config: function(api, $stateParams) {
-                    return api.releases.config({id: $stateParams.id, commit: $stateParams.commit}).$promise;
+                    return api.repos.config({id: $stateParams.id, commit: $stateParams.commit}).$promise;
                 },
                 commit: function(api, $stateParams) {
                     return api.commits.get({commit: $stateParams.commit, id: $stateParams.id}).$promise;

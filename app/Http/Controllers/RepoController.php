@@ -1,13 +1,18 @@
 <?php namespace App\Http\Controllers;
 
 use App\Ansible\Roles\RoleRepository;
+use App\Config\DogproConfig;
 use App\Http\Requests\Repo\CreateRepoRequest;
 use App\Jobs\Repo\CloneRepoJob;
 use App\Jobs\Repo\DeleteRepoJob;
 use App\Jobs\Repo\UpdateRepoJob;
 use App\Model\Repo;
 use App\Model\User;
+use Gitonomy\Git\Blob;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Class RepoController
@@ -15,7 +20,7 @@ use Illuminate\Http\Request;
 class RepoController extends Controller
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @return Repo[]
      */
     public function index()
     {
@@ -26,14 +31,22 @@ class RepoController extends Controller
         }
     }
 
-    public function roles()
+    /**
+     * @param RoleRepository $repository
+     * @return array
+     */
+    public function roles(RoleRepository $repository)
     {
-        return app(RoleRepository::class)->all();
+        return $repository->all();
     }
 
+    /**
+     * @param Repo $repo
+     * @return Repo
+     */
     public function get(Repo $repo)
     {
-        return $repo->toArray();
+        return $repo;
     }
 
     /**
@@ -57,10 +70,15 @@ class RepoController extends Controller
         return $repo;
     }
 
+    /**
+     * @param Repo $repo
+     * @param Request $request
+     * @return Repo
+     */
     public function update(Repo $repo, Request $request)
     {
-        $repo->params = $request->get('params');
-        $repo->save();
+        $repo->fill($request->only('params'))->save();
+
         return $repo;
     }
 
@@ -111,7 +129,6 @@ class RepoController extends Controller
             ];
         }
 
-
         return $result;
     }
 
@@ -128,15 +145,52 @@ class RepoController extends Controller
         return $repo;
     }
 
+    /**
+     * @param Repo $repo
+     * @param User $user
+     * @return Repo
+     */
     public function postUser(Repo $repo, User $user)
     {
         $repo->users()->attach($user->id);
         return $repo;
     }
 
+    /**
+     * @param Repo $repo
+     * @param User $user
+     * @return Repo
+     */
     public function deleteUser(Repo $repo, User $user)
     {
         $repo->users()->detach($user->id);
         return $repo;
+    }
+
+    /**
+     * @param Repo $repo
+     * @param string $commit
+     * @return DogproConfig|JsonResponse
+     */
+    public function config(Repo $repo, $commit)
+    {
+        $commit = $repo->git()->getCommit($commit);
+
+        if (!$commit) {
+            abort(404);
+        }
+
+        try {
+            $tree = $commit->getTree()->getEntry(DogproConfig::FILENAME);
+            if ($tree instanceof Blob) {
+                return new DogproConfig($tree->getContent());
+            }
+        } catch (InvalidArgumentException $e) {
+            return response()->json(['error'=>'Configuration file not found!'], 422);
+        } catch (ParseException $e) {
+            return response()->json(['error'=>'Could not parse configuration file: ' . $e->getMessage()], 422);
+        }
+
+        return new JsonResponse(new \stdClass());
     }
 }

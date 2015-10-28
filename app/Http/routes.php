@@ -9,6 +9,14 @@ Route::group(['prefix' => 'internal'], function() {
 });
 
 Route::group(['prefix'=>'api', 'middleware' => 'jwt.auth'], function() {
+    Route::group(['prefix'=>'release', 'middleware'=>'access.repo'], function() {
+        Route::get('/{release}', 'ReleaseController@get');
+        Route::post('/{release}', 'ReleaseController@update');
+        Route::get('/', 'ReleaseController@all');
+        Route::post('/', 'ReleaseController@create');
+        Route::get('/{release}/log', 'ReleaseController@log');
+    });
+
     Route::group(['prefix'=>'repo', 'middleware'=>'access.repo'], function() {
         Route::get('/', 'RepoController@index');
         Route::post('/', 'RepoController@create');
@@ -17,13 +25,7 @@ Route::group(['prefix'=>'api', 'middleware' => 'jwt.auth'], function() {
         Route::get('/{repo}/commit/{hash}', 'RepoController@commit');
         Route::get('/{repo}/commit/query/{page}', 'RepoController@commits');
         Route::post('/{repo}/pull', 'RepoController@pull');
-
-        Route::get('/{repo}/release/{release}', 'ReleaseController@get');
-        Route::post('/{repo}/release/{release}', 'ReleaseController@update');
-        Route::get('/{repo}/release', 'ReleaseController@all');
-        Route::post('/{repo}/release', 'ReleaseController@create');
-        Route::get('/{repo}/release/{release}/log', 'ReleaseController@log');
-        Route::get('/{repo}/release/{commit}/config', 'ReleaseController@config');
+        Route::get('/{repo}/config/{commit}', 'RepoController@config');
 
         Route::group(['middleware'=>'auth.admin'], function() {
             Route::post('/{repo}/user/{user}', 'RepoController@postUser');
