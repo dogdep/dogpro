@@ -1,6 +1,7 @@
 <?php namespace App\Services\Notifiers;
 
 use App\Model\Release;
+use Gitonomy\Git\Commit;
 use Maknz\Slack\Client;
 
 /**
@@ -27,11 +28,11 @@ class SlackNotifier implements ReleaseNotifierInterface
      */
     public function notifyFailure(Release $release, $error)
     {
-        if (!$this->channel($release) || !$release->repo->param('notify_failure')) {
+        if ($this->channel($release) === false || !$release->repo->param('notify_failure')) {
             return;
         }
 
-        $this->sendNotification($release, 'Release failed', [
+        $this->sendNotification($release, $this->channel($release), 'Release failed', [
             'text' => $error,
             'color' => 'danger',
         ]);
@@ -42,18 +43,18 @@ class SlackNotifier implements ReleaseNotifierInterface
      */
     public function notifySuccess(Release $release)
     {
-        if (!$this->channel($release) || !$release->repo->param('notify_success')) {
+        if ($this->channel($release) === false || !$release->repo->param('notify_success')) {
             return;
         }
 
-        $this->sendNotification($release, 'Release successful', [
+        $this->sendNotification($release, $this->channel($release), 'Release successful', [
             'color' => 'good',
         ]);
     }
 
     /**
      * @param Release $release
-     * @return null|false
+     * @return string|false
      */
     public function channel(Release $release)
     {
@@ -62,36 +63,46 @@ class SlackNotifier implements ReleaseNotifierInterface
 
     /**
      * @param Release $release
+     * @param $commit
+     * @return array
+     */
+    protected function describeCommitFields(Release $release, Commit $commit)
+    {
+        return [
+            [
+                'title' => 'Commit',
+                'value' => $commit->getShortHash(),
+                'short' => true,
+            ],
+            [
+                'title' => 'Message',
+                'value' => $commit->getShortMessage(),
+                'short' => true
+            ],
+            [
+                'title' => 'Author',
+                'value' => $commit->getAuthorName() . '(' . $commit->getAuthorEmail() . ')',
+            ],
+            [
+                'title' => 'Details',
+                'value' => $release->url(),
+            ],
+        ];
+    }
+
+    /**
+     * @param Release $release
+     * @param string $channel
      * @param string $title
      * @param array $message
      */
-    protected function sendNotification(Release $release, $title, array $message)
+    protected function sendNotification(Release $release, $channel, $title, array $message)
     {
-        $commit = $release->commit();
-        $this->slack->createMessage()->to($this->channel($release))->attach($message + [
-                'fallback' => $title,
-                'fields' => [
-                    [
-                        'title' => 'Commit',
-                        'value' => $commit->getShortHash(),
-                        'short' => true,
-                    ],
-                    [
-                        'title' => 'Message',
-                        'value' => $commit->getShortMessage(),
-                        'short' => true
-                    ],
-                    [
-                        'title' => 'Author',
-                        'value' => $commit->getAuthorName() . '(' . $commit->getAuthorEmail() . ')',
-                    ],
-                    [
-                        'title' => 'Details',
-                        'value' => $release->url(),
-                    ],
+        $message = $this->slack->createMessage()->to($channel)->attach($message + [
+            'fallback' => $title,
+            'fields' => $this->describeCommitFields($release, $release->commit())
+        ]);
 
-                ]
-            ]
-        )->send($message);
+        $this->slack->send($message);
     }
 }

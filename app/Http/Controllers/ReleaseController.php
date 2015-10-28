@@ -1,15 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use App\Config\DogproConfig;
 use App\Http\Requests\Release\CreateRelease;
 use App\Jobs\Release\PrepareReleaseJob;
 use App\Model\Release;
-use App\Model\Repo;
-use Gitonomy\Git\Blob;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Class ReleaseController
@@ -18,11 +12,11 @@ class ReleaseController extends Controller
 {
     /**
      * @param CreateRelease $request
-     * @param Repo $repo
      * @return Release
      */
-    public function create(CreateRelease $request, Repo $repo)
+    public function create(CreateRelease $request)
     {
+        $repo = $request->repo();
         $commit = $repo->git()->getCommit($request->get('commit'));
 
         if (!$commit) {
@@ -43,7 +37,7 @@ class ReleaseController extends Controller
         return $release;
     }
 
-    public function update(Repo $repo, Release $release, Request $request)
+    public function update(Release $release, Request $request)
     {
         switch ($request->get('status')) {
             case Release::QUEUED:
@@ -64,34 +58,12 @@ class ReleaseController extends Controller
         return $release;
     }
 
-    public function config(Repo $repo, $commit)
+    public function all(Request $request)
     {
-        $commit = $repo->git()->getCommit($commit);
-
-        if (!$commit) {
-            abort(404);
-        }
-
-        try {
-            $tree = $commit->getTree()->getEntry(DogproConfig::FILENAME);
-            if ($tree instanceof Blob) {
-                return new DogproConfig($tree->getContent());
-            }
-        } catch (InvalidArgumentException $e) {
-            return response()->json(['error'=>'Configuration file not found!'], 422);
-        } catch (ParseException $e) {
-            return response()->json(['error'=>'Could not parse configuration file: ' . $e->getMessage()], 422);
-        }
-
-        return new JsonResponse(new \stdClass());
+        return Release::query()->where('repo_id', $request->get('repo_id'))->paginate()->items();
     }
 
-    public function all(Repo $repo)
-    {
-        return iterator_to_array($repo->releases()->paginate());
-    }
-
-    public function get(Repo $repo, Release $release)
+    public function get(Release $release)
     {
         return $release->toArray() + [
             'time_avg' => $release->avg(),
