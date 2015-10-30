@@ -57,13 +57,15 @@ class AuthController extends Controller
      */
     public function getRefresh(JWTAuth $jwt)
     {
-        try {
-            $token = $jwt->refresh();
-        } catch (JWTException $e) {
-            return new JsonResponse(null, 401);
+        if ($jwt->getToken()) {
+            try {
+                return new JsonResponse(['token' => $jwt->refresh()]);
+            } catch (JWTException $e) {
+                return new JsonResponse(['error'=>$e->getMessage()], 401);
+            }
         }
 
-        return new JsonResponse(['token' => $token]);
+        return new JsonResponse(['error'=>'Could not refresh token'], 401);
     }
 
     /**

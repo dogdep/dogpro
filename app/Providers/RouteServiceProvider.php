@@ -1,11 +1,8 @@
-<?php
-
-namespace App\Providers;
+<?php namespace App\Providers;
 
 use App\Model\Inventory;
 use App\Model\Release;
 use App\Model\Repo;
-use App\Model\SshKey;
 use App\Model\User;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
@@ -35,9 +32,6 @@ class RouteServiceProvider extends ServiceProvider
         $router->model('repo', Repo::class);
         $router->model('release', Release::class);
         $router->model('inventory', Inventory::class);
-        $router->bind('key', function($key) {
-            return SshKey::get($key) ?: abort(404);
-        });
     }
 
     /**

@@ -1,9 +1,6 @@
-<?php
-
-namespace App\Providers;
+<?php namespace App\Providers;
 
 use App\Services\GitlabProvider;
-use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
