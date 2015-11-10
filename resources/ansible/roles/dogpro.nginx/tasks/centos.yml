@@ -5,6 +5,7 @@
 
 - name: NGINX | SELINUX BINDINGS
   yum: name={{item}} state=present
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
   with_items:
    - libsemanage-python
    - libselinux-python
@@ -14,7 +15,7 @@
 
 - name: NGINX | SET HTTPD_UNIFIED (SELINUX)
   seboolean: name={{item}} state=yes persistent=yes
-  when: ansible_selinux.status == "enabled"
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
   with_items:
     - httpd_unified
     - httpd_can_network_connect
