@@ -29,5 +29,5 @@
 
 - name: NGINX | RESTORE SELINUX CONTEXT
   shell: restorecon -R {{ html_root }}
-  when: ansible_selinux.status is defined is defined and ansible_selinux.status == "enabled" and www_created.changed
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled" and www_created.changed
   notify: reload nginx
