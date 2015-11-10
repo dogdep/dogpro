@@ -58,6 +58,10 @@
   include: composer.yml
   when: "'composer' in tasks"
 
+- name: DEPLOY | RUN DEPLOY TASKS
+  include: {{ item }}.yml
+  with_items: "{{ tasks }}"
+
 - name: DEPLOY | BUILD ASSETS
   script: assets.sh {{ assets_dir }} {{ prev_assets_dir }}
 

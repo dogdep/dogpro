@@ -1,6 +1,7 @@
 /vendor
 /node_modules
 /.env
+/.idea
 /resources/vendor
 /public/build
 /docker-compose.yml

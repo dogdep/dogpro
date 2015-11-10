@@ -1,0 +1,15 @@
+---
+
+- name: DEPLOY | YII | INSTALL COMPOSER PHAR
+  shell: curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
+  args:
+    creates: /usr/local/bin/composer
+
+- name: DEPLOY | YII | RUN COMPOSER INSTALL
+  composer:
+    command: "global require"
+    arguments: "fxp/composer-asset-plugin:~1.0.3"
+    working_dir: "{{ release_dir }}/{{ composer_dir }}"
+
+- name: DEPLOY | YII | RUN COMPOSER INSTALL
+  composer: command=install working_dir="{{ release_dir }}/{{ composer_dir }}"
