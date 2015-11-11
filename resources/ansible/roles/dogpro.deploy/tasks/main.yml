@@ -54,11 +54,11 @@
 
 - include: "{{ build_path + '/' + build_release | default('empty.yml') }}"
 
-- name: DEPLOY | RUN DEPLOY TASKS
+- name: DEPLOY | RUN COMPOSER
   include: composer.yml
   when: "'composer' in tasks"
 
-- name: DEPLOY | RUN DEPLOY TASKS
+- name: DEPLOY | RUN YII
   include: yii.yml
   when: "'yii' in tasks"
 

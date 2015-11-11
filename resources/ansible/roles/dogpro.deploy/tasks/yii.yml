@@ -5,10 +5,11 @@
   args:
     creates: /usr/local/bin/composer
 
-- name: DEPLOY | YII | RUN COMPOSER INSTALL
+- name: DEPLOY | YII | INSTALL COMPOSER ASSET PLUGIN
   composer:
-    command: "global require"
-    arguments: "fxp/composer-asset-plugin:~1.0.3"
+    command: "global require 'fxp/composer-asset-plugin:~1.0'"
+    no_dev: no
+    optimize_autoloader: no
     working_dir: "{{ release_dir }}/{{ composer_dir }}"
 
 - name: DEPLOY | YII | RUN COMPOSER INSTALL

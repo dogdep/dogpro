@@ -5,7 +5,7 @@ desc:
 variables:
   tasks:
     name: Tasks to run
-    desc: Comma separated list of tasks (can be composer, npm, node, symfony)
+    desc: Comma separated list of tasks (can be composer, yii)
     type: array
   deploy_to:
     name: Deploy to
