@@ -10,6 +10,7 @@ use Gitonomy\Git\Commit;
  * @property int $id
  * @property int $repo_id
  * @property array|null $roles
+ * @property array|null $params
  * @property string $commit
  * @property string $status
  * @property Inventory inventory
@@ -62,6 +63,7 @@ class Release extends Model
         'user_id',
         'roles',
         'raw_log',
+        'params',
         'time',
         'started_at'
     ];
@@ -175,6 +177,15 @@ class Release extends Model
     }
 
     /**
+     * @param string $key
+     * @return null
+     */
+    public function param($key)
+    {
+        return isset($this->params[$key]) ? $this->params[$key] : null;
+    }
+
+    /**
      * @param array $value
      */
     public function setRolesAttribute(array $value)
@@ -199,5 +210,19 @@ class Release extends Model
     public function getStartedAtAttribute($value)
     {
         return empty($value) ? null : strtotime($value);
+    }
+
+    public function getParamsAttribute($value)
+    {
+        if (!empty($value)) {
+            return json_decode($value, true);
+        }
+
+        return [];
+    }
+
+    public function setParamsAttribute($value)
+    {
+        $this->attributes['params'] = json_encode((array) $value);
     }
 }

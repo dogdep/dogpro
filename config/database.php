@@ -54,7 +54,7 @@ return [
 
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => env('MYSQL_HOST', 'localhost'),
+            'host'      => env('MYSQL_HOSTNAME', 'localhost'),
             'database'  => env('MYSQL_DATABASE', 'forge'),
             'username'  => env('MYSQL_USER', 'forge'),
             'password'  => env('MYSQL_PASSWORD', ''),

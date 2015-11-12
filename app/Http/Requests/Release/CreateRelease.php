@@ -17,7 +17,8 @@ class CreateRelease extends Request
         return [
             'repo_id' => 'required|exists:repos,id',
             'inventory_id' => 'required|exists:inventories,id',
-            'roles' => 'array|required|at_least:1'
+            'roles' => 'array|required|at_least:1',
+            'params' => 'array',
         ];
     }
 

@@ -41,10 +41,12 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $this->release->path(),
                 Release::INVENTORY_FILENAME,
                 Release::PLAYBOOK_FILENAME,
-                $this->release->inventory->params + [
+                $this->release->inventory->params + $this->release->params + [
                     'private_key' => $key,
                 ]
             );
+
+            print_r($ansible);
 
             $process = $ansible->play();
             $process->start();

@@ -30,6 +30,7 @@ class ReleaseController extends Controller
             'roles' => $request->roles(),
             'inventory_id' => $request->get('inventory_id'),
             'user_id' => $this->user()->id,
+            'params' => $request->get('params'),
         ]);
 
         $this->dispatch(new PrepareReleaseJob($release));

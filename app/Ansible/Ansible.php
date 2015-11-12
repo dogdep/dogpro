@@ -73,11 +73,7 @@ class Ansible
      */
     public function play()
     {
-        $processBuilder = ProcessBuilder::create(["ansible-playbook", "-i", $this->inventoryFile, $this->playbookFile])
-            ->setWorkingDirectory($this->dir)
-            ->setTimeout(600)
-            ->setEnv('ANSIBLE_FORCE_COLOR', true);
-
+        $processBuilder = $this->makeProcess();
         $processBuilder->setEnv("ANSIBLE_NOCOWS", 'True');
         $processBuilder->setEnv("ANSIBLE_HOST_KEY_CHECKING", 'False');
         $processBuilder->setEnv("ANSIBLE_DEPRECATION_WARNINGS", false);
@@ -96,5 +92,22 @@ class Ansible
         }
 
         return $processBuilder->getProcess();
+    }
+
+    /**
+     * @return ProcessBuilder
+     */
+    protected function makeProcess()
+    {
+        $args = ["ansible-playbook", "-i", $this->inventoryFile, $this->playbookFile];
+
+        if (!empty($this->options['verbose'])) {
+            $args[] = "-vvv";
+        }
+
+        return ProcessBuilder::create($args)
+            ->setWorkingDirectory($this->dir)
+            ->setTimeout(600)
+            ->setEnv('ANSIBLE_FORCE_COLOR', true);
     }
 }
