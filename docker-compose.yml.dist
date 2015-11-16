@@ -11,7 +11,7 @@ web:
    - "8880:80"
   volumes:
      - ".:/var/www"
-     - "docker/nginx/nginx.conf:/etc/nginx/sites-enabled/laravel.conf"
+     - "./docker/nginx/nginx.conf:/etc/nginx/sites-enabled/laravel.conf"
   links:
    - php
   environment:
