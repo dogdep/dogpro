@@ -46,8 +46,6 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 ]
             );
 
-            print_r($ansible);
-
             $process = $ansible->play();
             $process->start();
 

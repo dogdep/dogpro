@@ -66,7 +66,6 @@ class DogproConfig implements JsonSerializable, Jsonable, Arrayable
                 throw new InvalidConfigException("Role field must be defined for every play");
             }
 
-
             $play = new PlayConfig(array_get($playConfig, 'name', $playConfig['role']));
             $play->setHosts(array_get($playConfig, 'hosts', 'all'));
             if (isset($playConfig['vars'])) {
@@ -93,5 +92,17 @@ class DogproConfig implements JsonSerializable, Jsonable, Arrayable
             'roles' => $this->roles(),
             'global' => $this->globals(),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getVars()
+    {
+        if (!isset($this->data['vars'])) {
+            return [];
+        }
+
+        return (array) $this->data['vars'];
     }
 }

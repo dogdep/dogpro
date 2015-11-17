@@ -113,7 +113,6 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
         $this->fs()->put($this->release->path("empty.yml"), "");
 
         $playbook = new PlaybookConfig();
-
         $config = $this->release->config();
 
         foreach ($config->roles() as $play) {
@@ -131,7 +130,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             "build_version" => $this->release->commit,
             "build_version_short" => $this->release->commit()->getShortHash(),
             "inventory_name" => $this->release->inventory->name,
-        ]);
+        ] + $config->getVars());
 
         $playbookFile = $this->release->path(Release::PLAYBOOK_FILENAME);
         if (!$this->fs()->put($playbookFile, $playbook->render())) {
