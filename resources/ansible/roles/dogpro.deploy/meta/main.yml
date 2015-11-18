@@ -63,6 +63,7 @@ variables:
     name: Services to restart
     desc: Comma separated list of services
     type: array
+
 dependencies:
  - { role: dogpro.common }
  - { role: dogpro.user_exist }
