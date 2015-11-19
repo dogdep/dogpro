@@ -40,6 +40,8 @@ After you install all of these and project is reachable in your browser, run the
   - `composer install`  
   - `php artisan key:generate`
   - `php artisan migrate`
+
+Also you should run queue worker, see [laravel docs](http://laravel.com/docs/5.1/queues#running-the-queue-listener) on how to setup it.
   
 That is it.
   
