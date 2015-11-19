@@ -117,7 +117,8 @@
             webNotification.showNotification(status, {
                 body: body,
                 icon: '/build/img/icon-' + icon + '.png',
-                url: window.location.href
+                url: window.location.href,
+                autoClose: 5000
             }, function onShow(error) {
                 if (error) {
                     console.error('Unable to show notification: ' + error.message);
