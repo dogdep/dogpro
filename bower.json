@@ -28,7 +28,8 @@
     "ifvisible.js": "~1.0.4",
     "ng-sortable": "~1.2.2",
     "ngSmoothScroll": "~1.7.1",
-    "yamljs": "~0.1.5"
+    "yamljs": "~0.1.5",
+    "angular-web-notification": "~0.0.40"
   },
   "resolutions": {
     "angular": "1.4.7",

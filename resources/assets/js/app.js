@@ -13,7 +13,8 @@
             'smoothScroll',
             'angular-loading-bar',
             'angular-jwt',
-            'anim-in-out'
+            'anim-in-out',
+            'angular-web-notification'
         ];
     }
 

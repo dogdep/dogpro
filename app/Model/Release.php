@@ -103,7 +103,11 @@ class Release extends Model
      */
     public function commit()
     {
-        return $this->repo->git()->getCommit($this->commit);
+        if ($this->repo->git()) {
+            return $this->repo->git()->getCommit($this->commit);
+        }
+
+        return null;
     }
 
     /**
@@ -199,7 +203,7 @@ class Release extends Model
     public function toArray()
     {
         return parent::toArray() + [
-            'commit_info' => CommitPager::commitToArray($this->commit()),
+            'commit_info' => $this->commit() ? CommitPager::commitToArray($this->commit()) : null,
         ];
     }
 

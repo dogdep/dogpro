@@ -22,7 +22,7 @@ class StartSessionOnlyForInternals
     {
         foreach ($this->only as $only) {
             if (!$request->is($only)) {
-                config()->set('session.driver', 'array');
+                config()->set('session.driver', null);
             }
         }
 

@@ -4,11 +4,13 @@
         .module('dp')
         .controller("RepoReleaseCtrl", ctrl);
 
-    function ctrl($scope, repo, release, ansi2html, $sce, Pusher, $timeout, $interval) {
+    function ctrl($scope, repo, release, ansi2html, $sce, Pusher, $timeout, $interval, webNotification) {
         $scope.release = release;
         $scope.logs = $sce.trustAsHtml(ansi2html.toHtml(release.raw_log));
         $scope.lastTask = getLastTask(release.raw_log);
         $scope.repo = repo;
+
+        window.notify.requestPermission();
 
         var pusher = Pusher.pusher().subscribe("releases");
 
@@ -75,6 +77,18 @@
         });
 
         function onReleaseUpdate(release) {
+
+            if (release.status && release.status != $scope.release.status) {
+                switch (release.status) {
+                    case "error":
+                        showNotification("error", "Release failed!", "An error occurred.");
+                        break;
+                    case "completed":
+                        showNotification("success", "Release completed.");
+                        break;
+                }
+            }
+
             $timeout(function(){
                 angular.extend($scope.release, release);
                 if (typeof release.raw_log == "string") {
@@ -97,6 +111,18 @@
             }
 
             return "";
+        }
+
+        function showNotification(icon, status, body) {
+            webNotification.showNotification(status, {
+                body: body,
+                icon: '/build/img/icon-' + icon + '.png',
+                url: window.location.href
+            }, function onShow(error) {
+                if (error) {
+                    console.error('Unable to show notification: ' + error.message);
+                }
+            });
         }
     }
 })();

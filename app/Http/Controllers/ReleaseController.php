@@ -61,10 +61,17 @@ class ReleaseController extends Controller
 
     public function all(Request $request)
     {
-        return Release::query()
+        $items =  Release::query()
             ->where('repo_id', $request->get('repo_id'))
             ->orderBy('created_at', 'desc')
-            ->paginate()->items();
+            ->paginate()
+            ->items();
+
+        foreach ($items as $item) {
+            $item->toArray();
+        }
+
+        return $items;
     }
 
     public function get(Release $release)
