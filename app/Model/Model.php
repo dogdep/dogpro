@@ -16,4 +16,9 @@ class Model extends \Illuminate\Database\Eloquent\Model
     {
         return $date->format(DATE_ISO8601);
     }
+
+    protected function getArrayableRelations()
+    {
+        return [];
+    }
 }

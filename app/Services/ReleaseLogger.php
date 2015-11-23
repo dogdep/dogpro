@@ -44,7 +44,7 @@ class ReleaseLogger
         $this->pushRelease([]);
     }
 
-    public function info($string, $data = null)
+    public function info($string, array $data = [])
     {
         $this->write($string);
         $this->pushRelease($data);
@@ -63,17 +63,15 @@ class ReleaseLogger
         $this->output = $output;
     }
 
-    public function comment($string, $data = null)
+    public function comment($string, array $data = [])
     {
         $this->write("<comment>$string</comment>");
         $this->pushRelease($data);
     }
 
-    protected function pushRelease($data)
+    protected function pushRelease(array $data = [])
     {
-        $this->pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray() + [
-            $data
-        ]);
+        $this->pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray() + $data);
     }
 
     private function write($message)

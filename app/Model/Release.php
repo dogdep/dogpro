@@ -20,6 +20,7 @@ use Gitonomy\Git\Commit;
  * @property integer $inventory_id
  * @property integer $user_id
  * @property integer $time
+ * @property array $commit_info
  * @property \Carbon\Carbon $started_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -49,9 +50,19 @@ class Release extends Model
     const CANCELLED = 'cancelled';
 
     /**
-     * @var DogproConfig
+     * @var array
+     */
+    protected $appends = ['commit_info'];
+
+    /**
+     * @var DogproConfig|null
      */
     private $config;
+
+    /**
+     * @var ReleaseLogger|null
+     */
+    private $logger;
 
     /**
      * @var array
@@ -82,7 +93,9 @@ class Release extends Model
             ->avg('time');
     }
 
-    private $logger;
+    /**
+     * @return ReleaseLogger
+     */
     public function logger()
     {
         if (is_null($this->logger)) {
@@ -211,11 +224,9 @@ class Release extends Model
     /**
      * @return array
      */
-    public function toArray()
+    public function getCommitInfoAttribute()
     {
-        return parent::toArray() + [
-            'commit_info' => $this->commit() ? CommitPager::commitToArray($this->commit()) : null,
-        ];
+        return $this->commit() ? CommitPager::commitToArray($this->commit()) : null;
     }
 
     /**
@@ -227,6 +238,10 @@ class Release extends Model
         return empty($value) ? null : strtotime($value);
     }
 
+    /**
+     * @param string $value
+     * @return array|mixed
+     */
     public function getParamsAttribute($value)
     {
         if (!empty($value)) {
@@ -236,6 +251,9 @@ class Release extends Model
         return [];
     }
 
+    /**
+     * @param string $value
+     */
     public function setParamsAttribute($value)
     {
         $this->attributes['params'] = json_encode((array) $value);

@@ -7,7 +7,6 @@ use App\Services\NotifierService;
 use App\Traits\ManageFilesystem;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Pusher;
 use Symfony\Component\Process\Process;
 
 /**
@@ -36,7 +35,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
         $key = $this->writePrivateKey();
 
         try {
-            $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime()]);
+            $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime(), 'raw_log' => '']);
             $this->release->logger()->comment("Starting release...");
 
             $ansible = new Ansible(
@@ -116,8 +115,9 @@ class PlaybookJob implements ShouldQueue, SelfHandling
      */
     public function updateRelease(Process $process)
     {
-        $this->release->update(['raw_log' => $process->getOutput() . PHP_EOL . $process->getErrorOutput()]);
         $out = $process->getIncrementalOutput() . $process->getIncrementalErrorOutput();
+        $this->release->update(['raw_log' => $process->getOutput() . PHP_EOL . $process->getErrorOutput()]);
+
         if (!empty($out)) {
             $this->release->logger()->info($out);
         }
