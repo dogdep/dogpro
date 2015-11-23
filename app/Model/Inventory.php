@@ -97,7 +97,7 @@ class Inventory extends Model
     public function toArray()
     {
         return parent::toArray() + [
-            "remote" => url("/git", [$this->repo->id, $this->name], false)
+            "remote" => sprintf("%s/git/%s/%s", env('APP_URL'), $this->repo->id, $this->name),
         ];
     }
 }
