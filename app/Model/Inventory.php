@@ -93,4 +93,11 @@ class Inventory extends Model
         $this->public_key = $key['publickey'];
         $this->private_key = $key['privatekey'];
     }
+
+    public function toArray()
+    {
+        return parent::toArray() + [
+            "remote" => url("/git", [$this->repo->id, $this->name], false)
+        ];
+    }
 }

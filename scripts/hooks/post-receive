@@ -1,0 +1,6 @@
+#!/bin/sh
+read oldrev newrev refname
+BRANCH=${refname#refs/heads/}
+URL=$(git config --get remote.origin.url)
+
+php /var/www/artisan deploy "$URL" $INVENTORY -c $newrev

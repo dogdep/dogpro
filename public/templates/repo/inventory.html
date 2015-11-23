@@ -31,6 +31,7 @@
     <li ng-repeat="(i, inv) in repo.inventories" class="list-group-item">
         <div class="col-buttons pull-right">
             <button class="btn btn-link" ng-click="remove(inv)"><i class="fa fa-times"></i></button>
+            <button class="btn btn-link" popover-title="GIT remote" popover="{{ inv.remote }}"><i class="fa fa-info-circle"></i></button>
             <button class="btn btn-link" ng-click="inventoryCollapse[i]=!inventoryCollapse[i]"><i class="fa fa-pencil"></i></button>
         </div>
         <div class="content">

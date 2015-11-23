@@ -1,5 +1,11 @@
 <?php
 
+Route::group(['prefix' => 'git/{repo}/{inv}'], function() {
+    Route::get('HEAD', 'Git\GitInfoController@getHead');
+    Route::get('info/refs', 'Git\GitInfoController@getRefs');
+    Route::post('git-receive-pack', 'Git\GitInfoController@receivePack');
+});
+
 Route::group(['prefix' => 'internal'], function() {
     Route::controller('auth', 'AuthController');
 

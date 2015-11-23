@@ -21,13 +21,7 @@ class AnsibleException extends ReleaseException
     public function __construct(Release $release, Ansible $ansible, $message = "")
     {
         $this->ansible = $ansible;
-        $message = sprintf(
-            "Error while running ansible (%s/%s): %s",
-            $ansible->getPlaybookFile(),
-            $ansible->getInventoryFile(),
-            $message
-        );
-        parent::__construct($release, $message);
+        parent::__construct($release, "Error while running ansible");
     }
 
     /**

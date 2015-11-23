@@ -2,6 +2,7 @@
 
 use App\Config\DogproConfig;
 use App\Git\CommitPager;
+use App\Services\ReleaseLogger;
 use Gitonomy\Git\Commit;
 
 /**
@@ -79,6 +80,16 @@ class Release extends Model
             ->where('status', Release::COMPLETED)
             ->where('time', '>', 0)
             ->avg('time');
+    }
+
+    private $logger;
+    public function logger()
+    {
+        if (is_null($this->logger)) {
+            $this->logger = new ReleaseLogger($this);
+        }
+
+        return $this->logger;
     }
 
     /**
