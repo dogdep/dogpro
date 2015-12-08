@@ -39,6 +39,11 @@ class Repo extends Model
     protected $fillable = ['url', 'name', 'group'];
 
     /**
+     * @var array
+     */
+    protected $hidden = ['releases'];
+
+    /**
      * @var Repository
      */
     private $repo;

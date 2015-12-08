@@ -4,6 +4,7 @@
     </div>
     <div class="pull-right text-right">
         <div am-time-ago="release.created_at"></div>
+        <span class="label label-default">{{ release.inventory.name }}</span>
     </div>
     <div>
         <span class="text-muted">{{ release.commit_info.shortHash }}</span>

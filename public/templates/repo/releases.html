@@ -16,6 +16,7 @@
             </div>
 
             <div class="pull-right text-right">
+              <span class="label label-default">{{ release.inventory.name }}</span>
               <span class="label label-default" ng-repeat="role in release.roles">{{ role }}</span>
               <span class="label label-warning" ng-if="release.status=='cancelled'"><i class="fa fa-times"></i> Cancelled</span>
               <span class="label label-success" ng-if="release.status=='completed'"><i class="fa fa-check"></i> Completed</span>

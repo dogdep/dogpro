@@ -35,7 +35,7 @@ class Inventory extends Model
     /**
      * @var array
      */
-    protected $hidden = ['private_key'];
+    protected $hidden = ['private_key', 'repo'];
 
     /**
      * Use this in we'll need to modify contents

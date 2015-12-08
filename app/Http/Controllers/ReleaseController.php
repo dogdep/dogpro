@@ -59,9 +59,14 @@ class ReleaseController extends Controller
         return $release;
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function all(Request $request)
     {
         return Release::query()
+            ->with('inventory')
             ->where('repo_id', $request->get('repo_id'))
             ->orderBy('created_at', 'desc')
             ->paginate()
@@ -75,8 +80,6 @@ class ReleaseController extends Controller
      */
     public function get(Release $release)
     {
-        return $release->toArray() + [
-            'time_avg' => $release->avg(),
-        ];
+        return $release->load('inventory');
     }
 }

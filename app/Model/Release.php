@@ -52,7 +52,7 @@ class Release extends Model
     /**
      * @var array
      */
-    protected $appends = ['commit_info'];
+    protected $appends = ['commit_info', 'time_avg'];
 
     /**
      * @var DogproConfig|null
@@ -261,5 +261,13 @@ class Release extends Model
     public function setParamsAttribute($value)
     {
         $this->attributes['params'] = json_encode((array) $value);
+    }
+
+    /**
+     * @return float
+     */
+    public function getTimeAvgAttribute()
+    {
+        return $this->avg();
     }
 }
