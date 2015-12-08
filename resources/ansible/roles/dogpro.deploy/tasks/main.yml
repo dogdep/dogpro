@@ -1,11 +1,4 @@
 ---
-- name: GATHER OS SPECIFIC VARS
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "../../../vars/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
-    - "../../../vars/{{ ansible_distribution }}.yml"
-    - "../../../vars/{{ ansible_os_family }}.yml"
-
 - name: DEPLOY | GENERATE RELEASE ID
   shell: date '+%Y%m%d%H%M%S'
   register: release_date
@@ -13,6 +6,10 @@
 - name: DEPLOY | PREVIOUS RELEASE
   shell: "[ -d '{{ deploy_to }}/current' ] && readlink {{ deploy_to }}/current || echo ''"
   register: prev_release
+
+- name: DEPLOY | SETUP DEPLOYMENT ENVIRONMENT
+  include: setup.yml
+  when: prev_release.stdout == ""
 
 - name: DEPLOY | SETTING FACTS
   set_fact:
@@ -23,13 +20,6 @@
     previous_release: "{{ prev_release.stdout }}"
     assets_dir: "{{ deploy_to }}/builds/{{ release_date.stdout }}{{ '/' + asset_path if asset_path != '' else '/' }}"
     prev_assets_dir: "{{ prev_release.stdout }}{{ '/' + asset_path if asset_path != '' else '/' }}"
-
-- name: DEPLOY | SETUP
-  file: dest={{ deploy_to }}/{{ item }} state=directory mode=0755 owner={{ deploy_user }}
-  with_items:
-   - releases
-   - shared
-   - builds
 
 - name: DEPLOY | CLEANUP OLD BUILDS
   shell: "ls -1dt {{ deploy_to }}/builds/* | xargs rm -rf"

@@ -1,0 +1,13 @@
+---
+- name: DEPLOY | SETUP
+  file: dest={{ item }} state=directory mode=0755 owner={{ deploy_user }}
+  with_items:
+   - "{{ deploy_to }}/releases"
+   - "{{ deploy_to }}/shared"
+   - "{{ deploy_to }}/builds"
+
+- include: setup_ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- include: setup_centos.yml
+  when: ansible_distribution == "CentOS"

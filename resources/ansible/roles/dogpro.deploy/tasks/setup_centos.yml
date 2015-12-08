@@ -1,0 +1,3 @@
+---
+- name: COMMON | INSTALL ACL
+  yum: name=acl
