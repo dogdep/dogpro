@@ -226,7 +226,11 @@ class Release extends Model
      */
     public function getCommitInfoAttribute()
     {
-        return $this->commit() ? CommitPager::commitToArray($this->commit()) : null;
+        try {
+            return $this->commit() ? CommitPager::commitToArray($this->commit()) : null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**

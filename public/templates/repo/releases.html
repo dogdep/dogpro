@@ -2,7 +2,7 @@
   <li ng-repeat="release in releases" class="list-group-item">
     <div class=" content">
       <div class="media">
-        <div class="media-left">
+        <div class="media-left" ng-if="release.commit_info">
           <img ng-src="{{ release.commit_info.image }}" class="media-object img-rounded" style="height: 40px"/>
         </div>
         <div class="media-body">
@@ -26,7 +26,8 @@
               <div class="text-muted time" am-time-ago="release.created_at"></div>
             </div>
           </div>
-          <div class="text-muted" tooltip="{{ release.commit_info.name }}">Commit by: {{ release.commit_info.name }}</div>
+          <div class="text-muted" ng-if="release.commit_info" tooltip="{{ release.commit_info.name }}">Commit by: {{ release.commit_info.name }}</div>
+          <div class="text-muted" ng-if="!release.commit_info">Commit not available</div>
         </div>
       </div>
     </div>
