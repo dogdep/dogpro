@@ -7,6 +7,7 @@ use App\Jobs\Job;
 use App\Jobs\Repo\CleanupReleasesJob;
 use App\Model\Release;
 use App\Traits\ManageFilesystem;
+use Illuminate\Bus\Dispatcher;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -19,7 +20,6 @@ use Symfony\Component\Process\ProcessBuilder;
 class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
 {
     use ManageFilesystem;
-    use DispatchesJobs;
 
     /**
      * @var Release
@@ -27,18 +27,25 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
     private $release;
 
     /**
-     * @param Release $release
+     * @var bool
      */
-    public function __construct(Release $release)
+    private $sync;
+
+    /**
+     * @param Release $release
+     * @param bool $sync
+     */
+    public function __construct(Release $release, $sync = false)
     {
         $this->release = $release;
+        $this->sync = $sync;
     }
 
     /**
-     * @param Pusher $pusher
+     * @param Dispatcher $bus
      * @throws \Exception
      */
-    public function handle(Pusher $pusher)
+    public function handle(Dispatcher $bus)
     {
         try {
             if ($this->release->isCancelled()) {
@@ -46,7 +53,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
             }
 
             $this->release->update(['status' => Release::PREPARING]);
-            $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
+            $this->release->logger()->comment("Preparing release...");
 
             $this->prepareReleaseDir();
             $this->createArchive();
@@ -57,11 +64,16 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
                 return;
             }
 
-            $this->dispatch(new PlaybookJob($this->release));
-            $this->dispatch(new CleanupReleasesJob($this->release->repo));
+            if ($this->sync) {
+                $bus->dispatchNow(new PlaybookJob($this->release));
+                $bus->dispatchNow(new CleanupReleasesJob($this->release->repo));
+            } else {
+                $bus->dispatch(new PlaybookJob($this->release));
+                $bus->dispatch(new CleanupReleasesJob($this->release->repo));
+            }
         } catch (\Exception $e) {
             $this->release->update(['status' => Release::ERROR, 'raw_logs'=>$e->getMessage()]);
-            $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
+            $this->release->logger()->push();
             throw $e;
         }
     }
@@ -116,7 +128,7 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
         $config = $this->release->config();
 
         foreach ($config->roles() as $play) {
-            if (in_array($play->name(), $this->release->roles)) {
+            if (in_array($play->name(), $this->release->roles) || in_array($play->role(), $this->release->roles)) {
                 $play->setSudo(true);
                 $playbook->add($play);
             }

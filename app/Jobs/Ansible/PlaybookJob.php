@@ -7,7 +7,6 @@ use App\Services\NotifierService;
 use App\Traits\ManageFilesystem;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Pusher;
 use Symfony\Component\Process\Process;
 
 /**
@@ -30,13 +29,15 @@ class PlaybookJob implements ShouldQueue, SelfHandling
         $this->release = $release;
     }
 
-    public function handle(Pusher $pusher)
+    public function handle()
     {
         $timeStarted = time();
         $key = $this->writePrivateKey();
 
         try {
-            $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime()]);
+            $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime(), 'raw_log' => '']);
+            $this->release->logger()->comment("Starting release...");
+
             $ansible = new Ansible(
                 $this->release->path(),
                 Release::INVENTORY_FILENAME,
@@ -55,7 +56,6 @@ class PlaybookJob implements ShouldQueue, SelfHandling
 
                 if ($lastOut != $out) {
                     $this->updateRelease($process);
-                    $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
                     $lastOut = $out;
                 }
 
@@ -71,18 +71,18 @@ class PlaybookJob implements ShouldQueue, SelfHandling
             $this->updateRelease($process);
 
             if ($this->release->status == Release::CANCELLED) {
-                $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
+                $this->release->logger()->warning("Release cancelled");
             } elseif ($process->getExitCode() == 0) {
                 $this->notifier()->notifySuccess($this->release);
                 $this->release->update(['status' => Release::COMPLETED, 'time'=>time() - $timeStarted]);
-                $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
+                $this->release->logger()->info("Release completed");
             } else {
                 $this->notifier()->notifyFailure($this->release, $process->getErrorOutput());
                 throw new AnsibleException($this->release, $ansible, $process->getErrorOutput());
             }
         } catch (\Exception $e) {
             $this->release->update(['status' => Release::ERROR, 'time'=>time() - $timeStarted]);
-            $pusher->trigger(['releases'], "release-" . $this->release->id, $this->release->toArray());
+            $this->release->logger()->push();
 
             $this->fs()->delete($key);
             throw $e;
@@ -115,6 +115,11 @@ class PlaybookJob implements ShouldQueue, SelfHandling
      */
     public function updateRelease(Process $process)
     {
+        $out = $process->getIncrementalOutput() . $process->getIncrementalErrorOutput();
         $this->release->update(['raw_log' => $process->getOutput() . PHP_EOL . $process->getErrorOutput()]);
+
+        if (!empty($out)) {
+            $this->release->logger()->info($out);
+        }
     }
 }

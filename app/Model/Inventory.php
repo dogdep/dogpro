@@ -35,7 +35,7 @@ class Inventory extends Model
     /**
      * @var array
      */
-    protected $hidden = ['private_key'];
+    protected $hidden = ['private_key', 'repo'];
 
     /**
      * Use this in we'll need to modify contents
@@ -92,5 +92,12 @@ class Inventory extends Model
         $key = SSH::generateKeyPair(sprintf("%s@dogpro", $this->name));
         $this->public_key = $key['publickey'];
         $this->private_key = $key['privatekey'];
+    }
+
+    public function toArray()
+    {
+        return parent::toArray() + [
+            "remote" => sprintf("%s/git/%s/%s", env('APP_URL'), $this->repo->id, $this->name),
+        ];
     }
 }

@@ -3,6 +3,7 @@
 use App\Git\CommitPager;
 use Gitonomy\Git\Exception\ProcessException;
 use Gitonomy\Git\Repository;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Repo
@@ -38,9 +39,24 @@ class Repo extends Model
     protected $fillable = ['url', 'name', 'group'];
 
     /**
+     * @var array
+     */
+    protected $hidden = ['releases'];
+
+    /**
      * @var Repository
      */
     private $repo;
+
+    public function checkHooks()
+    {
+        $hook = $this->repoPath("hooks");
+
+        if (!is_link($hook)) {
+            app('files')->deleteDirectory($hook);
+            symlink(app_path("../scripts/hooks"), $hook);
+        }
+    }
 
     /**
      * @param $commit

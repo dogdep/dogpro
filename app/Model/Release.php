@@ -2,6 +2,7 @@
 
 use App\Config\DogproConfig;
 use App\Git\CommitPager;
+use App\Services\ReleaseLogger;
 use Gitonomy\Git\Commit;
 
 /**
@@ -19,6 +20,7 @@ use Gitonomy\Git\Commit;
  * @property integer $inventory_id
  * @property integer $user_id
  * @property integer $time
+ * @property array $commit_info
  * @property \Carbon\Carbon $started_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -48,9 +50,19 @@ class Release extends Model
     const CANCELLED = 'cancelled';
 
     /**
-     * @var DogproConfig
+     * @var array
+     */
+    protected $appends = ['commit_info', 'time_avg'];
+
+    /**
+     * @var DogproConfig|null
      */
     private $config;
+
+    /**
+     * @var ReleaseLogger|null
+     */
+    private $logger;
 
     /**
      * @var array
@@ -79,6 +91,18 @@ class Release extends Model
             ->where('status', Release::COMPLETED)
             ->where('time', '>', 0)
             ->avg('time');
+    }
+
+    /**
+     * @return ReleaseLogger
+     */
+    public function logger()
+    {
+        if (is_null($this->logger)) {
+            $this->logger = new ReleaseLogger($this);
+        }
+
+        return $this->logger;
     }
 
     /**
@@ -200,11 +224,13 @@ class Release extends Model
     /**
      * @return array
      */
-    public function toArray()
+    public function getCommitInfoAttribute()
     {
-        return parent::toArray() + [
-            'commit_info' => $this->commit() ? CommitPager::commitToArray($this->commit()) : null,
-        ];
+        try {
+            return $this->commit() ? CommitPager::commitToArray($this->commit()) : null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
@@ -216,6 +242,10 @@ class Release extends Model
         return empty($value) ? null : strtotime($value);
     }
 
+    /**
+     * @param string $value
+     * @return array|mixed
+     */
     public function getParamsAttribute($value)
     {
         if (!empty($value)) {
@@ -225,8 +255,19 @@ class Release extends Model
         return [];
     }
 
+    /**
+     * @param string $value
+     */
     public function setParamsAttribute($value)
     {
         $this->attributes['params'] = json_encode((array) $value);
+    }
+
+    /**
+     * @return float
+     */
+    public function getTimeAvgAttribute()
+    {
+        return $this->avg();
     }
 }

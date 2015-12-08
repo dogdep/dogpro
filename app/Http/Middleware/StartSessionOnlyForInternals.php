@@ -8,7 +8,7 @@ use Closure;
 class StartSessionOnlyForInternals
 {
     protected $only = [
-        'internal/*'
+        'internal/auth/*'
     ];
 
     /**

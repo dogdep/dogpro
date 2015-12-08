@@ -84,6 +84,11 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
         return $this->name;
     }
 
+    public function role()
+    {
+        return reset($this->roles)["role"];
+    }
+
     /**
      * @param string $hosts
      */
