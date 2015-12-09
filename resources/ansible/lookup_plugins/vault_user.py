@@ -22,7 +22,6 @@ import os
 import urllib2
 import sys
 import json
-import base64
 import httplib
 import ssl
 from ansible import utils, errors
@@ -62,9 +61,7 @@ class DataDogVault(object):
         else:
             raise Exception("Invalid format: must be ID#TAG1|TAG2 or user@address");
 
-        authHeader = {
-            "Authorization": "Basic " + base64.b64encode(VAULT_APP_ID + ":" + VAULT_SECRET)
-        }
+        authHeader = {"Authorization": "Basic %s:%s" % (VAULT_APP_ID, VAULT_SECRET)}
 
         try:
             r = open_url(url, validate_certs=self.validate_certs, headers=authHeader)
