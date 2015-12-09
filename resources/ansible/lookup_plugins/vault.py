@@ -61,9 +61,7 @@ class DataDogVault(object):
         else:
             raise Exception("Invalid format: must be ID#TAG1|TAG2 or user@address");
 
-        authHeader = {
-            authHeader = {"Authorization": "Basic %s:%s" % (VAULT_APP_ID, VAULT_SECRET)}
-        }
+        authHeader = {"Authorization": "Basic %s:%s" % (VAULT_APP_ID, VAULT_SECRET)}
 
         try:
             r = open_url(url, validate_certs=self.validate_certs, headers=authHeader)
