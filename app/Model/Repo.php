@@ -201,4 +201,9 @@ class Repo extends Model
 
         return $this->users->contains('id', $user->id);
     }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('group', 'asc')->orderBy('name', 'asc');
+    }
 }

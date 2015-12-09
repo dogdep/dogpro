@@ -59,7 +59,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function repos()
     {
-        return $this->belongsToMany(Repo::class, 'repo_users');
+        return $this->belongsToMany(Repo::class, 'repo_users')->ordered();
     }
 
     public function getAvatarAttribute($value)

@@ -25,7 +25,7 @@ class RepoController extends Controller
     public function index()
     {
         if ($this->user()->admin) {
-            return Repo::all();
+            return Repo::query()->ordered()->get();
         } else {
             return $this->user()->repos;
         }
