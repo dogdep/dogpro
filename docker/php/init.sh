@@ -16,7 +16,7 @@ echo "[info] Waiting for mysql"
 sleep 10
 
 echo "[info] Migrating database"
-php /var/www/artisan migrate || true
+php /var/www/artisan migrate --force || true
 
 echo "Run: $@"
 exec "$@"
