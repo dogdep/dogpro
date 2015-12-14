@@ -1,4 +1,4 @@
-FROM datadoglt/php56:latest
+FROM datadoglt/php70:latest
 
 RUN yum install -y \
         ansible \
