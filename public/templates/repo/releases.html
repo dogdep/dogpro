@@ -24,7 +24,7 @@
               <span class="label label-danger" ng-if="release.status=='error'"><i class="fa fa-exclamation-triangle"></i> Error</span>
               <span class="label label-info" ng-if="release.status=='running'"><i class="fa fa-cog fa-spin"></i> Running</span>
               <span class="label label-info" ng-if="release.status=='preparing'"><i class="fa fa-cog fa-spin"></i> Preparing</span>
-              <div class="text-muted time" am-time-ago="release.created_at"></div>
+              <div class="text-muted" dp-time-ago="release.created_at"></div>
             </div>
           </div>
           <div class="text-muted" ng-if="release.commit_info" tooltip="{{ release.commit_info.name }}">Commit by: {{ release.commit_info.name }}</div>
