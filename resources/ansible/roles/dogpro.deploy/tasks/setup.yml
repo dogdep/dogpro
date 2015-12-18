@@ -7,7 +7,7 @@
    - "{{ deploy_to }}/builds"
 
 - include: setup_ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
 - include: setup_centos.yml
   when: ansible_distribution == "CentOS"
