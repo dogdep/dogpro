@@ -1,9 +1,13 @@
 ---
 
 - name: DEPLOY | INSTALL COMPOSER PHAR
-  shell: curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
+  shell: curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/bin
   args:
-    creates: /usr/local/bin/composer
+    creates: /usr/bin/composer
+
+- stat: path={{ build_path }}/composer.json
+  register: composer.json
 
 - name: DEPLOY | RUN COMPOSER INSTALL
   composer: command=install working_dir="{{ release_dir }}/{{ composer_dir }}"
+  when: composer_json.stat.exists
