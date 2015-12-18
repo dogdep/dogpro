@@ -10,4 +10,4 @@
 
 - name: DEPLOY | RUN COMPOSER INSTALL
   composer: command=install working_dir="{{ release_dir }}/{{ composer_dir }}"
-  when: composer_json.stat.exists
+  when: composer_json.stat.exists is defined and composer_json.stat.exists == True
