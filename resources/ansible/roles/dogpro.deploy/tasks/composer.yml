@@ -6,9 +6,9 @@
 - name: DEPLOY | INSTALL COMPOSER PHAR
   shell: curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir={{ shared_dir }}
   args:
-    creates: {{ shared_dir }}/composer
+    creates: "{{ shared_dir }}/composer"
   when: composer_json.stat.exists is defined and composer_json.stat.exists == True
 
 - name: DEPLOY | RUN COMPOSER INSTALL
-  shell: {{shared_dir}}/composer install --working_dir="{{ release_dir }}/{{ composer_dir }}" --no-dev --optimize-autoloader
+  shell: php {{shared_dir}}/composer install --working_dir={{ release_dir }}/{{ composer_dir }} --no-dev --optimize-autoloader
   when: composer_json.stat.exists is defined and composer_json.stat.exists == True
