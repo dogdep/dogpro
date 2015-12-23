@@ -129,7 +129,6 @@ class PrepareReleaseJob extends Job implements ShouldQueue, SelfHandling
 
         foreach ($config->roles() as $play) {
             if (in_array($play->name(), $this->release->roles) || in_array($play->role(), $this->release->roles)) {
-                $play->setSudo(true);
                 $playbook->add($play);
             }
         }
