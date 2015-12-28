@@ -1,7 +1,7 @@
 ---
 - name: DEPLOY | DETECT COMPOSER
   stat: path={{ build_path }}/composer.json
-  register: composer.json
+  register: composer_json
 
 - name: DEPLOY | INSTALL COMPOSER PHAR
   shell: curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir={{ shared_dir }}
