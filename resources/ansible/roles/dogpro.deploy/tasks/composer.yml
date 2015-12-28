@@ -1,6 +1,6 @@
 ---
 - name: DEPLOY | DETECT COMPOSER
-  stat: path={{ build_path }}/composer.json
+  stat: path={{ release_dir }}/composer.json
   register: composer_json
 
 - name: DEPLOY | INSTALL COMPOSER PHAR
@@ -10,5 +10,5 @@
   when: composer_json.stat.exists is defined and composer_json.stat.exists == True
 
 - name: DEPLOY | RUN COMPOSER INSTALL
-  shell: php {{shared_dir}}/composer install --working_dir={{ release_dir }}/{{ composer_dir }} --no-dev --optimize-autoloader
+  shell: php {{shared_dir}}/composer install --working-dir={{ release_dir }}/{{ composer_dir }} --no-dev --optimize-autoloader
   when: composer_json.stat.exists is defined and composer_json.stat.exists == True
