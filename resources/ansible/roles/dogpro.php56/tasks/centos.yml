@@ -4,8 +4,6 @@
   register: find_remi
   ignore_errors: true
 
-- debug: msg="DEBUG centos {{ ansible_distribution_version }}"
-
 - name: PHP | INSTALL REMI
   yum: name=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm state=present
   when: find_remi|failed and ansible_distribution == "CentOS" and ansible_distribution_version >= "7"

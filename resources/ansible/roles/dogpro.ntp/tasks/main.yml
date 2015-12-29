@@ -1,0 +1,10 @@
+---
+
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+- name: NTPD | START SERVICE
+  service: name=ntpd state=started enabled=yes

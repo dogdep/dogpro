@@ -1,0 +1,3 @@
+---
+- name: NTPD | INSTALL
+  yum: name=ntp state=present

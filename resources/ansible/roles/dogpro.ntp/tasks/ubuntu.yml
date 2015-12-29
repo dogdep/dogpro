@@ -1,0 +1,3 @@
+---
+- name: NTPD | INSTALL
+  apt: name=ntp state=present
