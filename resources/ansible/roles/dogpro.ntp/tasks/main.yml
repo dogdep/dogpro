@@ -7,4 +7,4 @@
   when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
 - name: NTPD | START SERVICE
-  service: name=ntpd state=started enabled=yes
+  service: name={{ ntp_service }} state=started enabled=yes
