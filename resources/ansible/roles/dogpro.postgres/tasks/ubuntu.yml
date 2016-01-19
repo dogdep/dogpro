@@ -1,0 +1,5 @@
+
+---
+
+- name: POSTGRES | INSTALL
+  apt: name=postgresql-server state=present

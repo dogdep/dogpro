@@ -1,0 +1,9 @@
+
+---
+
+- name: POSTGRES | INSTALL
+  yum: name={{item}} state=present
+  with_items:
+   - python-psycopg2
+   - postgresql-server
+

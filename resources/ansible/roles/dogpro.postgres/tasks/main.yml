@@ -1,0 +1,37 @@
+---
+- name: GATHER OS SPECIFIC VARS
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "../../../vars/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "../../../vars/{{ ansible_distribution }}.yml"
+    - "../../../vars/{{ ansible_os_family }}.yml"
+
+- include: centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: POSTGRES | USER EXIST
+  user: name={{ user }} password={{ password }} state=present
+
+- name: POSTGRES | INIT DB
+  shell: postgresql-setup initdb
+  ignore_errors: True
+
+- name: POSTGRES | SET AUTH METHODS
+  lineinfile: dest=/var/lib/pgsql/data/pg_hba.conf regexp='^local\s*all\s*postgres\s*\w+$' line='local all postgres md5'
+  notify: restart postgresql
+
+- name: POSTGRES | ENABLE AT STARTUP
+  service: name={{postgres_service}} state=started enabled=yes
+
+- meta: flush_handlers
+
+- name: POSTGRES | CREATE USERS
+  postgresql_user: name={{item | split(':') | first}} password={{item | split(':') | last}} state=present login_user={{ user }} login_password={{ password }}
+  with_items: users
+
+- name: POSTGRES | CREATE DATABASES
+  postgresql_db: name={{item}} state=present login_user={{ user }} login_password={{ password }}
+  with_items: databases

@@ -10,5 +10,5 @@
   when: composer_json.stat.exists is defined and composer_json.stat.exists == True
 
 - name: DEPLOY | RUN COMPOSER INSTALL
-  shell: php {{shared_dir}}/composer install --working-dir={{ release_dir }}/{{ composer_dir }} --no-dev --optimize-autoloader
+  shell: php {{shared_dir}}/composer install --working-dir={{ release_dir }}/{{ composer_dir }} --no-dev --optimize-autoloader --no-interaction
   when: composer_json.stat.exists is defined and composer_json.stat.exists == True

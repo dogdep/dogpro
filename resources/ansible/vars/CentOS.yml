@@ -2,4 +2,5 @@ php_pool_file: /etc/php-fpm.d/www.conf
 php_fpm_service: php-fpm
 php_ini: /etc/php.ini
 mysql_service: mysqld
+postgres_service: postgresql
 ntp_service: ntpd
