@@ -1,0 +1,17 @@
+name: Setup postgresql
+desc:
+  - Tasks:
+    - Install PostgreSQL community server
+    - Add databases
+    - Add users
+
+
+variables:
+  users:
+    name: Users
+    desc: Comma separated users to crate (myuser:mypass,myotheruser:otherpass)
+    type: array
+  databases:
+    name: Databases
+    desc: Comma separated databases to create
+    type: array
