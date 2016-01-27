@@ -9,6 +9,7 @@ use App\Jobs\Repo\UpdateRepoJob;
 use App\Model\Repo;
 use App\Model\User;
 use Gitonomy\Git\Blob;
+use Gitonomy\Git\Reference\Branch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -113,9 +114,10 @@ class RepoController extends Controller
     /**
      * @param Repo $repo
      * @param int $page
+     * @param string $branch
      * @return array
      */
-    public function commits(Repo $repo, $page = 1)
+    public function commits(Repo $repo, $page = 1, $branch = 'master')
     {
         if (!$repo->isCloned()) {
             return [];
@@ -123,10 +125,32 @@ class RepoController extends Controller
 
         $result = [];
 
-        foreach ($repo->commits()->paginate(null, $page)->toArray() as $commit) {
+        foreach ($repo->commits()->paginate($branch, $page)->toArray() as $commit) {
             $result[] = $commit + [
                 'release' => $repo->releases()->where('commit', $commit['hash'])->first()
             ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Repo $repo
+     * @param int $page
+     * @return array
+     */
+    public function branches(Repo $repo, $page = 1)
+    {
+        if (!$repo->isCloned()) {
+            return [];
+        }
+
+        $result = ["master"];
+
+        foreach ($repo->git()->getReferences() as $ref) {
+            if ($ref instanceof Branch && $ref->getName() != "master") {
+                $result[] = $ref->getName();
+            }
         }
 
         return $result;

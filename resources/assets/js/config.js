@@ -209,10 +209,13 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
             url: "/commits/:page",
             controller: "RepoCommitsCtrl",
             templateUrl: "/templates/repo/commits.html",
-            params: { page: "1" },
+            params: { page: "1", branch: "master" },
             resolve: {
                 commits: function (api, $stateParams) {
-                    return api.commits.query({id: $stateParams.id, page: $stateParams.page}).$promise;
+                    return api.commits.query({id: $stateParams.id, page: $stateParams.page, branch: $stateParams.branch}).$promise;
+                },
+                branches: function (api, $stateParams) {
+                    return api.branches.query({id: $stateParams.id}).$promise;
                 }
             }
         })

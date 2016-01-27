@@ -15,6 +15,14 @@
   </div>
 </div>
 
+
+<ul class="nav nav-pills nav-pills-sm">
+  <li ng-repeat="branch in branches" ng-class="{active: activeBranch==branch}">
+    <a ui-sref="user.repo.view.commits({branch: branch, id: repo.id})">{{ branch }}</a>
+  </li>
+</ul>
+<hr>
+
 <ul class="list-group">
 
   <li ng-repeat="commit in commits" class="list-group-item">

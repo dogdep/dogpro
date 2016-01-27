@@ -12,8 +12,9 @@
                 config: { method: "GET", url: "/api/repo/:id/config/:commit", params: {id: '@id', commit: '@commit'}}
             }),
             commits: $resource("/api/repo/:id/commit/:commit", {id: '@id', commit: '@commit'}, {
-                query: { url: "/api/repo/:id/commit/query/:page", isArray: true }
+                query: { url: "/api/repo/:id/commit/:page/:branch", isArray: true }
             }),
+            branches: $resource("/api/repo/:id/branches", {id: '@id'}),
             releases: $resource("/api/release/:id", {id: '@id'}),
             config: $resource("/api/config"),
             roles: $resource("/api/roles"),

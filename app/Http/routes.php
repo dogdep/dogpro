@@ -29,7 +29,8 @@ Route::group(['prefix'=>'api', 'middleware' => 'jwt.auth'], function() {
         Route::post('/{repo}', 'RepoController@update');
         Route::get('/{repo}', 'RepoController@get');
         Route::get('/{repo}/commit/{hash}', 'RepoController@commit');
-        Route::get('/{repo}/commit/query/{page}', 'RepoController@commits');
+        Route::get('/{repo}/commit/{page}/{branch}', 'RepoController@commits')->where('branch', '.*');
+        Route::get('/{repo}/branches', 'RepoController@branches');
         Route::post('/{repo}/pull', 'RepoController@pull');
         Route::get('/{repo}/config/{commit}', 'RepoController@config');
 

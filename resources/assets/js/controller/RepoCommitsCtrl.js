@@ -3,9 +3,11 @@
         .module('dp')
         .controller("RepoCommitsCtrl", ctrl);
 
-    function ctrl($scope, repo, commits, $state, toaster, Pusher) {
+    function ctrl($scope, repo, commits, $state, toaster, Pusher, branches) {
         $scope.repo = repo;
         $scope.commits = commits;
+        $scope.branches = branches;
+        $scope.activeBranch = $state.params.branch;
 
         $scope.hookPopover = function() {
             return 'Add webhook for push commits ' + repo.hookUrl;
