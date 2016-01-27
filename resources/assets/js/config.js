@@ -206,7 +206,7 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
             templateUrl: "/templates/repo/inventory.html"
         })
         .state('user.repo.view.commits', {
-            url: "/commits/:page",
+            url: "/commits/:page/:branch",
             controller: "RepoCommitsCtrl",
             templateUrl: "/templates/repo/commits.html",
             params: { page: "1", branch: "master" },

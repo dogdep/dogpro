@@ -49,7 +49,7 @@
            <div collapse="isSidebarCollapsed" class="nav-collapse-md" ng-click="isSidebarCollapsed=true">
                <ul class="nav">
                    <li ng-repeat="repo in repos|filter:filter as results track by repo.id">
-                       <a ng-class="{active: isActive(repo)}" ui-sref="user.repo.view.commits({id: repo.id})">
+                       <a ng-class="{active: isActive(repo)}" ui-sref="user.repo.view.commits({id: repo.id, branch: 'master'})">
                            {{ repo.group ? repo.group + ' /' : '' }}  {{ repo.name }}
                        </a>
                    </li>
