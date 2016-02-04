@@ -1,0 +1,22 @@
+---
+
+- name: PHP | INSTALL REPO
+  apt_repository: repo='ppa:ondrej/php'
+
+- name: PHP | INSTALL PHP
+  apt: name={{ item }} update_cache=yes
+  with_items:
+   - php7.0
+   - php7.0-fpm
+   - php7.0-intl
+   - php7.0-imap
+   - php7.0-mysql
+   - php7.0-gd
+   - php7.0-json
+   - php7.0-curl
+   - curl
+   - git
+
+- name: PHP | INSTALL ADDITIONAL MODULES
+  apt: name={{ item }} state=present
+  with_items: "{{ modules }}"

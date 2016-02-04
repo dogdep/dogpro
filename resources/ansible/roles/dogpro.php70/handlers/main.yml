@@ -1,0 +1,9 @@
+---
+- name: restart php-fpm
+  service: name={{ php_fpm_service }} state=restarted
+  ignore_errors: yes
+
+- name: reload php-fpm
+  service: name={{ php_fpm_service }} state=reloaded
+  ignore_errors: yes
+

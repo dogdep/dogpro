@@ -1,0 +1,2 @@
+user: "{{ global.http_user }}"
+group: "{{ global.http_user }}"
