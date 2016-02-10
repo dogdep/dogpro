@@ -77,6 +77,14 @@ angular.module('dp').config(function($locationProvider, $stateProvider, $urlRout
                 }
             }
         })
+        .state('user.docs.examples', {
+            url: "/examples",
+            templateUrl: '/templates/docs/examples.html'
+        })
+        .state('user.docs.getting_started', {
+            url: "/getting-started",
+            templateUrl: '/templates/docs/getting_started.html'
+        })
         .state('user.docs.ansible', {
             url: "/ansible",
             templateUrl: '/templates/docs/ansible.html'

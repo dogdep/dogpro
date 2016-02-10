@@ -7,7 +7,7 @@
         $scope.roleConfig = roleConfig;
         $scope.config = {
             defaults: {
-                deploy_to: "/var/www"
+                deploy_dir: "/var/www"
             },
             plays: []
         };

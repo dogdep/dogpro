@@ -1,0 +1,50 @@
+<h2>Examples</h2>
+<h4>Symfony application</h4>
+<pre><code>defaults:
+  deploy_dir: /var/www/app-&#123;&#123; inventory_name &#125;&#125;/web
+
+plays:
+
+  - name: NTP
+    role: dogpro.ntp
+
+  - name: Setup nginx
+    role: dogpro.nginx
+    configs: [cloudflare]
+
+  - name: Add nginx site config
+    role: dogpro.nginx_site
+    site: web
+    type: deployment/app
+
+  - name: PHP 5.6
+    role: dogpro.php56
+
+  - name: Nodejs
+    role: dogpro.nodejs
+
+  - name: Crons
+    role: dogpro.cron
+    jobs:
+    - name: notify about upcoming interviews
+      job: php /var/www/app/web/current/app/console app:interview:remind --env=prod
+
+    - name: send reminders for unread messages
+      job: php /var/www/app/web/current/app/console app:messages:remind --env=prod
+      minute: 1
+      hour: 8
+
+  - name: Deploy
+    role: dogpro.deploy
+    build_release: deployment/build_release.yml
+    pre_release: deployment/pre_release.yml
+    shared_dirs: ["app/logs", "web/uploads", "web/media", "app/var"]
+    shared_files: ["app/config/parameters.yml"]
+    writable: ["app/cache", "app/logs", "app/var"]
+
+  - name: Install mysql
+    role: dogpro.mysql
+    databases: [app]
+    users: ["app:secretPassWord"]
+    permissions: ["app:app"]
+</code></pre>

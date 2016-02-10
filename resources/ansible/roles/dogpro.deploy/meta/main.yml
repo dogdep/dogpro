@@ -7,10 +7,6 @@ variables:
     name: Tasks to run
     desc: Comma separated list of tasks (can be composer, yii)
     type: array
-  deploy_to:
-    name: Deploy to
-    desc: Path on server where deploy to
-    type: string
   keep_releases:
     name: Keep releases
     type: integer
