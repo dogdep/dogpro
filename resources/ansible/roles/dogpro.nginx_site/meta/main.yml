@@ -4,6 +4,8 @@ desc:
 variables:
   site:
     name: Name of config file
+  port:
+    name: Port to listen to
   html_root:
     name: Path to public dir
   domain_name:
@@ -23,3 +25,5 @@ variables:
     name: Enabled ciphers
   ssl_protocols:
     name: Enabled protocols
+  ssl_port:
+    name: Secure port to listen to
