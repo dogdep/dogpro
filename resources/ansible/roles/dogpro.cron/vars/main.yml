@@ -1,2 +1,2 @@
-user: "{{ global.deploy_user }}"
+user: "{{ project.deploy_user }}"
 jobs: []

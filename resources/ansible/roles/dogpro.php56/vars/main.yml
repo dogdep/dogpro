@@ -1,2 +1,2 @@
-user: "{{ global.http_user }}"
-group: "{{ global.http_user }}"
+user: "{{ project.http_user }}"
+group: "{{ project.http_user }}"

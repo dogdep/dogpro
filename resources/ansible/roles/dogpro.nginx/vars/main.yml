@@ -1,1 +1,1 @@
-user: "{{ global.http_user }}"
+user: "{{ project.http_user }}"

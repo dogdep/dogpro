@@ -66,7 +66,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $process->stop(0);
             }
 
-            $this->fs()->delete($key);
+            //$this->fs()->delete($key);
 
             $this->updateRelease($process);
 
@@ -84,7 +84,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
             $this->release->update(['status' => Release::ERROR, 'time'=>time() - $timeStarted]);
             $this->release->logger()->push();
 
-            $this->fs()->delete($key);
+            //$this->fs()->delete($key);
             throw $e;
         }
     }

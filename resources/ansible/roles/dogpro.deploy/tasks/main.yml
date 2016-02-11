@@ -3,6 +3,9 @@
   shell: date '+%Y%m%d%H%M%S'
   register: release_date
 
+- apt: name=git state=present
+- git: repo={{ project.repo_url }} dest={{ deploy_to }}/repo accept_hostkey=yes
+
 - name: DEPLOY | PREVIOUS RELEASE
   shell: "[ -d '{{ deploy_to }}/current' ] && readlink {{ deploy_to }}/current || echo ''"
   register: prev_release

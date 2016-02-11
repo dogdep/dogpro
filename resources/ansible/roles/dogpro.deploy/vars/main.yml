@@ -1,6 +1,6 @@
-deploy_to: "{{ global.deploy_dir }}"
-www_user: "{{ global.http_user }}"
-deploy_user: "{{ global.deploy_user }}"
+deploy_to: "{{ project.deploy_dir }}"
+www_user: "{{ project.http_user }}"
+deploy_user: "{{ project.deploy_user }}"
 asset_path: ""
 reload: ["{{php_fpm_service}}", "nginx"]
 restart: []

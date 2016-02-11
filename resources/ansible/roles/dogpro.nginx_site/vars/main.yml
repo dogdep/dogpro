@@ -1,2 +1,2 @@
 name: "{{ project_name }}"
-html_root: "{{ global.deploy_dir }}/current/{{ global.public_dir }}"
+html_root: "{{ project.deploy_dir }}/current/{{ project.public_dir }}"
