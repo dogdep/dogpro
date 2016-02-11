@@ -2,6 +2,7 @@
 
 use App\Ansible\Ansible;
 use App\Exceptions\AnsibleException;
+use App\Git\SSHAgent;
 use App\Model\Release;
 use App\Services\NotifierService;
 use App\Traits\ManageFilesystem;
@@ -33,6 +34,8 @@ class PlaybookJob implements ShouldQueue, SelfHandling
     {
         $timeStarted = time();
         $key = $this->writePrivateKey();
+        var_dump(config('git.private_key'));
+        $agent = SSHAgent::start()->add(config('git.private_key'));
 
         try {
             $this->release->update(['status' => Release::RUNNING, 'started_at'=>new \DateTime(), 'raw_log' => '']);
@@ -47,7 +50,7 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 ]
             );
 
-            $process = $ansible->play();
+            $process = $ansible->play($agent);
             $process->start();
 
             $lastOut = $process->getOutput();
@@ -66,8 +69,6 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $process->stop(0);
             }
 
-            //$this->fs()->delete($key);
-
             $this->updateRelease($process);
 
             if ($this->release->status == Release::CANCELLED) {
@@ -83,9 +84,10 @@ class PlaybookJob implements ShouldQueue, SelfHandling
         } catch (\Exception $e) {
             $this->release->update(['status' => Release::ERROR, 'time'=>time() - $timeStarted]);
             $this->release->logger()->push();
-
-            //$this->fs()->delete($key);
             throw $e;
+        } finally {
+            $this->fs()->delete($key);
+            $agent->kill();
         }
     }
 

@@ -1,5 +1,7 @@
 <?php namespace App\Ansible;
 
+use App\Git\SSH;
+use App\Git\SSHAgent;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -70,8 +72,10 @@ class Ansible
 
     /**
      * Play playbook
+     * @param SSHAgent $agent
+     * @return \Symfony\Component\Process\Process
      */
-    public function play()
+    public function play(SSHAgent $agent = null)
     {
         $processBuilder = $this->makeProcess();
         $processBuilder->setEnv("ANSIBLE_NOCOWS", 'True');
@@ -82,10 +86,12 @@ class Ansible
         $processBuilder->setEnv("ANSIBLE_LOOKUP_PLUGINS", base_path("resources/ansible/lookup_plugins"));
         $processBuilder->setEnv("ANSIBLE_LIBRARY", base_path("resources/ansible/modules"));
         $processBuilder->setEnv("ANSIBLE_FILTER_PLUGINS", base_path("resources/ansible/filter_plugins"));
-        $processBuilder->setEnv("ANSIBLE_SSH_ARGS", '-o ControlMaster=auto -o ControlPersist=60s -o ForwardAgent=yes');
 
-        //$processBuilder->setEnv("SSH_AUTH_SOCK", "/tmp/ssh-jykMOjfvQUZo/agent.3313");
-        //$processBuilder->setEnv("SSH_AGENT_PID", "3314");
+        if (!is_null($agent)) {
+            $processBuilder->setEnv("SSH_AUTH_SOCK", $agent->getSocket());
+            $processBuilder->setEnv("SSH_AGENT_PID", $agent->getPid());
+            $processBuilder->setEnv("ANSIBLE_SSH_ARGS", '-o ControlMaster=auto -o ControlPersist=60s -o ForwardAgent=yes');
+        }
 
         if (!empty($this->options['pipelining'])) {
             $processBuilder->setEnv('ANSIBLE_SSH_PIPELINING', true);

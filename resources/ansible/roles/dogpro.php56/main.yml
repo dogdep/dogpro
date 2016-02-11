@@ -1,0 +1,26 @@
+name: PHP 5.6
+desc:
+ - Install PHP 5.6 from REMI repository.
+variables:
+  timezone:
+    name: Timezone
+    desc: Set timezone in /etc/php.ini
+    type: string
+  user:
+    name: PHP-FPM user
+    desc: User that runs php-fpm process
+    type: string
+  group:
+    name: PHP-FPM group
+    desc: Group that runs php-fpm process
+    type: string
+  modules:
+    name: Additional modules
+    desc: Comma separated list of package names
+    type: array
+  params:
+    name: php.ini params
+    desc: |
+      Array of objects with attirbutes `key` and  `value`.
+      {key: expose_php, value: Off}
+    type: array

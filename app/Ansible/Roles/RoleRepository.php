@@ -57,8 +57,8 @@ class RoleRepository
         }
 
         $meta = ['variables'=>[]];
-        if ($this->fs()->exists("$path/meta/main.yml")) {
-            $meta = Yaml::parse($this->fs()->get("$path/meta/main.yml"));
+        if ($this->fs()->exists("$path/meta.yml")) {
+            $meta = Yaml::parse($this->fs()->get("$path/meta.yml"));
             if (!isset($meta['variables'])) {
                 $meta['variables'] = [];
             }

@@ -7,6 +7,11 @@ use phpseclib\Crypt\RSA;
  */
 class SSH
 {
+    /**
+     * @var SSHAgent|null
+     */
+    private $agent = null;
+
     public static function generateKeyPair($comment = 'dogpro') {
         $rsa = new RSA();
         $rsa->setPublicKeyFormat(RSA::PUBLIC_FORMAT_OPENSSH);
@@ -44,5 +49,14 @@ class SSH
         if (!@chmod($path, 0600)) {
             throw new \RuntimeException("Failed to set owner for file $path");
         }
+    }
+
+    public function getAgent()
+    {
+        if (is_null($this->agent)) {
+            return $this->agent = SSHAgent::start();
+        }
+
+        return $this->agent;
     }
 }
