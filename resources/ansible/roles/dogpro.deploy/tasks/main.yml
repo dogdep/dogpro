@@ -3,11 +3,6 @@
   shell: date '+%Y%m%d%H%M%S'
   register: release_date
 
-- yum: name=git state=present
-
-- git: repo={{ project.repo_url }} dest={{ deploy_to }}/repo accept_hostkey=yes
-  sudo: no
-
 - name: DEPLOY | PREVIOUS RELEASE
   shell: "[ -d '{{ deploy_to }}/current' ] && readlink {{ deploy_to }}/current || echo ''"
   register: prev_release
@@ -27,10 +22,11 @@
     prev_assets_dir: "{{ prev_release.stdout }}{{ '/' + asset_path if asset_path != '' else '/' }}"
 
 - name: DEPLOY | CLEANUP OLD BUILDS
-  shell: "ls -1dt {{ deploy_to }}/builds/* | xargs rm -rf"
+  shell: "rm -rf {{ deploy_to }}/builds/*"
 
 - name: DEPLOY | STARTING BUILD
   file: path="{{ release_dir }}" state=directory owner={{ deploy_user }}
+  become: yes
 
 - name: DEPLOY | UPLOADING CODE
   unarchive: dest={{ release_dir }} src={{ build_tar }} owner={{ deploy_user }}
@@ -50,12 +46,8 @@
 - include: "{{ build_path + '/' + build_release | default('empty.yml') }}"
 
 - name: DEPLOY | RUN COMPOSER
-  include: composer.yml
-  when: "'composer' in tasks"
-
-- name: DEPLOY | RUN YII
-  include: yii.yml
-  when: "'yii' in tasks"
+  include: "{{ item }}.yml"
+  with_items: tasks
 
 - name: DEPLOY | BUILD ASSETS
   script: assets.sh {{ assets_dir }} {{ prev_assets_dir }}

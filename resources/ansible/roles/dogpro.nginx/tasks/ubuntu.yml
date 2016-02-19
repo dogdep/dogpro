@@ -4,8 +4,9 @@
   register: repo_installed
 
 - name: NGINX | ADD NGINX REPO KEY
-  shell: wget -q -O - "$@" http://nginx.org/packages/keys/nginx_signing.key | sudo apt-key add -
+  shell: wget -q -O - "$@" http://nginx.org/packages/keys/nginx_signing.key | apt-key add -
   when: repo_installed.changed
+  become: yes
 
 - name: NGINX | INSTALL NGINX
   apt: name=nginx update_cache=yes state=present

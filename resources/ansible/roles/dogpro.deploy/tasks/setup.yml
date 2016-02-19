@@ -5,9 +5,4 @@
    - "{{ deploy_to }}/releases"
    - "{{ deploy_to }}/shared"
    - "{{ deploy_to }}/builds"
-
-- include: setup_ubuntu.yml
-  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
-
-- include: setup_centos.yml
-  when: ansible_distribution == "CentOS"
+  become: yes

@@ -1,0 +1,4 @@
+---
+- name: INSTALL PACKAGE
+  yum: name={{ item }} state=present
+  with_items: packages

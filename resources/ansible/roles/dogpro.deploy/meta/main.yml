@@ -1,3 +1,4 @@
 dependencies:
  - { role: dogpro.common }
  - { role: dogpro.user_exist }
+ - { role: dogpro.packages, packages: [git, acl] }

@@ -2,6 +2,12 @@
     <h3>Settings</h3>
     <hr>
     <div class="form-group">
+        <label for="slack_channel" class="col-sm-3 control-label">Repository</label>
+        <div class="col-sm-9">
+            <input class="form-control" readonly type="text" ng-model="repo.url">
+        </div>
+    </div>
+    <div class="form-group">
         <label for="slack_channel" class="col-sm-3 control-label">Slack channel</label>
         <div class="col-sm-9">
             <input class="form-control" type="text" placeholder="#channel" id="slack_channel" ng-model="repo.params.slack_channel">

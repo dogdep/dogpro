@@ -11,5 +11,3 @@ class CallbackModule(object):
 
     def on_any(self, *args, **kwargs):
         sys.stdout.flush()
-
-

@@ -32,18 +32,13 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
     private $name = null;
 
     /**
-     * @var boolean
-     */
-    private $sudo = false;
-
-    /**
      * @param string $name
      * @param array $hosts
      */
     public function __construct($name, $hosts = [])
     {
         $this->name = $name;
-        $this->hosts = (array) $hosts;
+        $this->hosts = (array)$hosts;
     }
 
     /**
@@ -61,7 +56,7 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
     public function addRole($role, array $roleVars = [])
     {
         if (!isset($this->roles[$role])) {
-            $this->roles[$role] = ['role' => (string) $role] + $roleVars;
+            $this->roles[$role] = ['role' => (string)$role] + $roleVars;
             return;
         }
 
@@ -94,7 +89,7 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
      */
     public function setHosts($hosts)
     {
-        $this->hosts = (array) $hosts;
+        $this->hosts = (array)$hosts;
     }
 
     /**
@@ -114,24 +109,16 @@ class PlayConfig implements Jsonable, JsonSerializable, Arrayable
     }
 
     /**
-     * @param bool $sudo
-     */
-    public function setSudo($sudo)
-    {
-        $this->sudo = $sudo;
-    }
-
-    /**
      * @return array
      */
     public function toArray()
     {
         return [
             'name' => $this->name,
-            'sudo' => $this->sudo ? 'yes' : 'no',
             'hosts' => implode(',', $this->hosts),
             'vars' => $this->vars,
             'roles' => array_values($this->roles),
+            'become' => true,
         ];
     }
 }

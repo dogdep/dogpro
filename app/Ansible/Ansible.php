@@ -86,6 +86,7 @@ class Ansible
         $processBuilder->setEnv("ANSIBLE_LOOKUP_PLUGINS", base_path("resources/ansible/lookup_plugins"));
         $processBuilder->setEnv("ANSIBLE_LIBRARY", base_path("resources/ansible/modules"));
         $processBuilder->setEnv("ANSIBLE_FILTER_PLUGINS", base_path("resources/ansible/filter_plugins"));
+        $processBuilder->setEnv("ANSIBLE_SUDO_FLAGS", "-H -S -n -E");
 
         if (!is_null($agent)) {
             $processBuilder->setEnv("SSH_AUTH_SOCK", $agent->getSocket());
