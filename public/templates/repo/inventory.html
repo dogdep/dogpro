@@ -15,7 +15,11 @@
     <div class="form-group">
         <label for="inv" class="col-sm-3 control-label">Inventory</label>
         <div class="col-sm-9">
-            <textarea id="inv" ng-model="inventory.inventory" class="form-control" rows="6" placeholder="username@example.com" required></textarea>
+            <textarea id="inv" ng-model="inventory.inventory" class="form-control" rows="6" placeholder="example.com ansible_user=username" required></textarea>
+            <span class="help-text text-muted">
+                <a class="text-muted" href="http://docs.ansible.com/ansible/intro_inventory.html" target="_blank"><i class="fa fa-info-circle"></i></a>
+                Ansible inventory format
+            </span>
         </div>
     </div>
 
