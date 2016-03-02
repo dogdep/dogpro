@@ -11,3 +11,4 @@ ssl_key: ~
 ssl_ciphers: "HIGH:!aNULL:!MD5"
 ssl_protocols: "TLSv1 TLSv1.1 TLSv1.2"
 ssl_port: 443
+max_body_size: 2M
