@@ -27,3 +27,5 @@ variables:
     name: Enabled protocols
   ssl_port:
     name: Secure port to listen to
+  max_body_size:
+    name: Client max body size
