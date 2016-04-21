@@ -2,6 +2,7 @@
 
 use App\Model\Release;
 use Gitonomy\Git\Commit;
+use Guzzle\Http\Exception\BadResponseException;
 use Maknz\Slack\Client;
 
 /**
@@ -103,6 +104,14 @@ class SlackNotifier implements ReleaseNotifierInterface
             'fields' => $this->describeCommitFields($release, $release->commit())
         ]);
 
-        $this->slack->send($message);
+        try {
+            $message->send();
+        } catch (BadResponseException $e) {
+            logger()->error("Error while notifying slack", [
+                'exception' => $e, "response"=>(string) $e->getResponse()->getBody()
+            ]);
+        } catch (\Exception $e) {
+            logger()->error("Error while notifying slack", ['exception' => $e]);
+        }
     }
 }
