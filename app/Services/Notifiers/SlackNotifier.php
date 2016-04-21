@@ -103,6 +103,10 @@ class SlackNotifier implements ReleaseNotifierInterface
             'fields' => $this->describeCommitFields($release, $release->commit())
         ]);
 
-        $this->slack->send($message);
+        try {
+            $this->slack->send($message);
+        } catch (\Exception $e) {
+            logger()->error("Error while notifying slack", ['exception' => $e]);
+        }
     }
 }

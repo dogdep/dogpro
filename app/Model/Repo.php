@@ -36,7 +36,7 @@ class Repo extends Model
     /**
      * @var array
      */
-    protected $fillable = ['url', 'name', 'group'];
+    protected $fillable = ['url', 'name', 'group', 'params'];
 
     /**
      * @var array

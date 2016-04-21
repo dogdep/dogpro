@@ -29,3 +29,6 @@ variables:
     name: Secure port to listen to
   max_body_size:
     name: Client max body size
+  env:
+    name: Environment variables to pass
+    type: array

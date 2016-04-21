@@ -77,11 +77,11 @@ class PlaybookJob implements ShouldQueue, SelfHandling
                 $this->release->update(['status' => Release::COMPLETED, 'time'=>time() - $timeStarted]);
                 $this->release->logger()->info("Release completed");
             } else {
-                $this->notifier()->notifyFailure($this->release, $process->getErrorOutput());
                 throw new AnsibleException($this->release, $ansible, $process->getErrorOutput());
             }
         } catch (\Exception $e) {
             $this->release->update(['status' => Release::ERROR, 'time'=>time() - $timeStarted]);
+            $this->notifier()->notifyFailure($this->release, $e->getMessage());
             $this->release->logger()->push();
 
             $this->fs()->delete($key);
