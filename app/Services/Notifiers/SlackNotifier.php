@@ -71,6 +71,11 @@ class SlackNotifier implements ReleaseNotifierInterface
     {
         return [
             [
+                'title' => 'Inventory',
+                'value' => $release->inventory->name,
+                'short' => true,
+            ],
+            [
                 'title' => 'Commit',
                 'value' => $commit->getShortHash(),
                 'short' => true,
