@@ -105,7 +105,7 @@ class SlackNotifier implements ReleaseNotifierInterface
         ]);
 
         try {
-            $this->slack->send($message);
+            $message->send();
         } catch (BadResponseException $e) {
             logger()->error("Error while notifying slack", [
                 'exception' => $e, "response"=>(string) $e->getResponse()->getBody()
