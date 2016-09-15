@@ -11,7 +11,7 @@
         "pda/pheanstalk": "~3.0",
         "tymon/jwt-auth": "dev-develop",
         "symfony/yaml": "^2.7.1",
-        "maknz/slack": "dev-master",
+        "maknz/slack": "1.6.*",
         "barryvdh/laravel-ide-helper": "^2.0@dev",
         "pusher/pusher-php-server": "dev-master",
         "doctrine/dbal": "*",
