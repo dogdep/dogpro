@@ -37,7 +37,10 @@ To setup manually there are several things you need on the server:
   
 After you install all of these and project is reachable in your browser, run these commands:
   - `cp .env.example .env`
-  - `composer install`  
+  - `bower install`
+  - `npm install`
+  - `gulp`
+  - `composer install`
   - `php artisan key:generate`
   - `php artisan migrate`
 
