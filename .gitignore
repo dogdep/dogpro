@@ -6,3 +6,4 @@
 /docker-compose.yml
 /_ide_helper.php
 *.pyc
+composer.lock
