@@ -1,0 +1,46 @@
+---
+
+- name: PHP | INSTALL REPO
+  apt_repository: repo='ppa:ondrej/php'
+
+- name: PHP | INSTALL PHP
+  apt: name={{ item }} update_cache=yes
+  with_items:
+   - php{{ php_version }}
+   - php{{ php_version }}-fpm
+   - php{{ php_version }}-intl
+   - php{{ php_version }}-imap
+   - php{{ php_version }}-mysql
+   - php{{ php_version }}-gd
+   - php{{ php_version }}-json
+   - php{{ php_version }}-curl
+   - curl
+   - git
+
+- name: PHP | INSTALL ADDITIONAL MODULES
+  apt: name={{ item }} state=present
+  with_items: "{{ modules }}"
+
+- name: PHP | UPDATE FPM CONFIG
+  lineinfile: dest=/etc/php/{{ php_version }}/fpm/pool.d/www.conf regexp='^;?catch_workers_output\s?=.*$' line=catch_workers_output=yes
+  notify: restart php-fpm
+
+- name: PHP | UPDATE FPM SOCKET
+  lineinfile: dest=/etc/php/{{ php_version }}/fpm/pool.d/www.conf regexp='^;?listen\s?=.*$' line=listen=127.0.0.1:9000
+  notify: restart php-fpm
+
+- name: PHP | SET FPM GROUP
+  lineinfile: dest=/etc/php/{{ php_version }}/fpm/pool.d/www.conf regexp="^group\s?=.*$" line="group = {{ group }}"
+  notify: restart php-fpm
+
+- name: PHP | SET FPM USER
+  lineinfile: dest=/etc/php/{{ php_version }}/fpm/pool.d/www.conf regexp="^user\s?=.*$" line="user = {{ user }}"
+  notify: restart php-fpm
+
+- name: PHP | SET TIMEZONE
+  lineinfile: dest=/etc/php/{{ php_version }}/fpm/php.ini regexp='^;?date\.timezone\s?=.*$' line="date.timezone={{ timezone }}"
+  notify: reload php-fpm
+
+- name: PHP | SET PHP INI PARAMS
+  lineinfile: dest=/etc/php/{{ php_version }}/fpm/php.ini regexp='^;?{{ item.key }} *=.*$' line="{{ item.key }}={{ item.value }}"
+  notify: reload php-fpm
