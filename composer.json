@@ -10,7 +10,7 @@
         "gitonomy/gitlib": "~1.0.2",
         "pda/pheanstalk": "~3.0",
         "tymon/jwt-auth": "dev-develop",
-        "symfony/yaml": "^2.7.1",
+        "symfony/yaml": "^2.8",
         "maknz/slack": "1.7.*",
         "barryvdh/laravel-ide-helper": "^2.0@dev",
         "pusher/pusher-php-server": "dev-master",
