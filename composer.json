@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
-        "gitonomy/gitlib": "~0.1.7",
+        "gitonomy/gitlib": "~1.0.2",
         "pda/pheanstalk": "~3.0",
         "tymon/jwt-auth": "dev-develop",
         "symfony/yaml": "^2.7.1",
