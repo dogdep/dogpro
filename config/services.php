@@ -39,6 +39,7 @@ return [
         'key' => env('PUSHER_KEY'),
         'secret' => env('PUSHER_SECRET'),
         'id' => env('PUSHER_ID'),
+        'cluster' => env('PUSHER_CLUSTER')
     ],
 
     'gitlab' => [

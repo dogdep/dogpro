@@ -1,6 +1,7 @@
 <?php namespace App\Services;
 
 use App\Model\Release;
+use Pusher\Pusher;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,7 +15,7 @@ class ReleaseLogger
     private $release;
 
     /**
-     * @var \Pusher
+     * @var \Pusher\Pusher
      */
     private $pusher;
 
@@ -25,14 +26,14 @@ class ReleaseLogger
 
     /**
      * @param Release $release
-     * @param \Pusher $pusher
+     * @param Pusher $pusher
      * @param OutputInterface $output
      */
-    public function __construct(Release $release, \Pusher $pusher = null, OutputInterface $output = null)
+    public function __construct(Release $release, Pusher $pusher = null, OutputInterface $output = null)
     {
         $this->release = $release;
         $this->output = $output;
-        $this->pusher = $pusher ? : app(\Pusher::class);
+        $this->pusher = $pusher ? : app(Pusher::class);
     }
 
     public function error($message, \Exception $exception = null)

@@ -2,6 +2,7 @@
 
 use App\Services\GitlabProvider;
 use Illuminate\Support\ServiceProvider;
+use Pusher\Pusher;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,12 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Pusher', function() {
-            return new \Pusher(
+        $this->app->bind('\Pusher\Pusher', function() {
+            return new Pusher(
                 config('services.pusher.key'),
                 config('services.pusher.secret'),
                 config('services.pusher.id'),
-                ['encrypted' => true]
+                ['encrypted' => true, 'cluster' => config('services.pusher.cluster')]
             );
         });
     }

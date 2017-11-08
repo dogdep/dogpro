@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "108837aba9148d0c8df8d78829b0a74d",
+    "content-hash": "e643c0339559882067120c20c0c6578d",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -2142,13 +2142,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "03d3417748fc70a889c97271e25e282ff1ff0ae3"
+                "url": "https://github.com/mn7z/pusher-http-php.git",
+                "reference": "5be2dd92fef351d87c3d22454b64830aa5b172c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/03d3417748fc70a889c97271e25e282ff1ff0ae3",
-                "reference": "03d3417748fc70a889c97271e25e282ff1ff0ae3",
+                "url": "https://api.github.com/repos/mn7z/pusher-http-php/zipball/5be2dd92fef351d87c3d22454b64830aa5b172c0",
+                "reference": "5be2dd92fef351d87c3d22454b64830aa5b172c0",
                 "shasum": ""
             },
             "require": {
@@ -2169,7 +2169,6 @@
                     "Pusher\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2187,7 +2186,10 @@
                 "rest",
                 "trigger"
             ],
-            "time": "2017-10-20T11:18:01+00:00"
+            "support": {
+                "source": "https://github.com/mn7z/pusher-http-php/tree/master"
+            },
+            "time": "2017-11-08T12:07:29+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

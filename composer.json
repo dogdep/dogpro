@@ -4,6 +4,12 @@
     "keywords": ["deployment"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mn7z/pusher-http-php.git"
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
@@ -13,7 +19,7 @@
         "symfony/yaml": "^2.8",
         "maknz/slack": "1.7.*",
         "barryvdh/laravel-ide-helper": "^2.0@dev",
-        "pusher/pusher-php-server": "dev-master",
+        "pusher/pusher-php-server": "dev-master#5be2dd92fef351d87c3d22454b64830aa5b172c0",
         "doctrine/dbal": "*",
         "laravel/socialite": "*",
         "phpseclib/phpseclib": "2.0.*"

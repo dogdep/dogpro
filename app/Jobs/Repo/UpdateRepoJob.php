@@ -9,7 +9,7 @@ use App\Model\Repo;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Pusher;
+use Pusher\Pusher;
 
 /**
  * Class UpdateCommand

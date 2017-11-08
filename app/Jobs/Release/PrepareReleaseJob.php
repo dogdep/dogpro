@@ -10,8 +10,6 @@ use App\Traits\ManageFilesystem;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Pusher;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
